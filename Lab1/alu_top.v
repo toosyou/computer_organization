@@ -1,3 +1,4 @@
+//0316055
 `timescale 1ns/1ps
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -29,7 +30,7 @@ module alu_top(
                cin,        //1 bit carry in (input)
                operation,  //operation      (input)
                result,     //1 bit result   (output)
-               cout,       //1 bit carry out(output)
+               cout       //1 bit carry out(output)
                );
 
      input src1;
@@ -45,12 +46,15 @@ module alu_top(
 
      reg    result;
      reg    cout;
-     reg    g, p;
 
      localparam [1:0] OP_AND = 2'b00, OP_OR = 2'b01, OP_ADD = 2'b10;
+     reg a, b;
+     reg g, p;
 
-     assign g = src1 & src2;
-     assign p = src1 | src2;
+     assign a = A_invert? !src1: src1;
+     assign b = B_invert? !src2: src2;
+     assign g = a & b;
+     assign p = a | b;
 
      always@( * )
      begin
@@ -61,7 +65,7 @@ module alu_top(
                result <= p;
           end
           else begin//operation==OP_ADD
-               result <= src1 ^ src2 ^ cin;
+               result <= a ^ b ^ cin;
                cout <= g | (p&cin);
           end
      end
