@@ -32,22 +32,38 @@ module alu_top(
                cout,       //1 bit carry out(output)
                );
 
-input         src1;
-input         src2;
-input         less;
-input         A_invert;
-input         B_invert;
-input         cin;
-input [2-1:0] operation;
+     input src1;
+     input src2;
+     input less;
+     input A_invert;
+     input B_invert;
+     input cin;
+     input [2-1:0] operation;
 
-output        result;
-output        cout;
+     output result;
+     output cout;
 
-reg           result;
+     reg    result;
+     reg    cout;
+     reg    g, p;
 
-always@( * )
-begin
+     localparam [1:0] OP_AND = 2'b00, OP_OR = 2'b01, OP_ADD = 2'b10;
 
-end
+     assign g = src1 & src2;
+     assign p = src1 | src2;
+
+     always@( * )
+     begin
+          if (operation==OP_AND) begin
+               result <= g;
+          end
+          else if (operation==OP_OR) begin
+               result <= p;
+          end
+          else begin//operation==OP_ADD
+               result <= src1 ^ src2 ^ cin;
+               cout <= g | (p&cin);
+          end
+     end
 
 endmodule
