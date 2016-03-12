@@ -29,12 +29,13 @@ module alu(
     input [3:0]         ALU_control,   // 4 bits ALU control input  (input)
                     //bonus_control, // 3 bits bonus control input(input)
     output reg [31:0]   result,        // 32 bits result            (output)
-    output reg [31:0]   zero,          // 1 bit when the output is 0, zero must be set (output)
+    output reg          zero,          // 1 bit when the output is 0, zero must be set (output)
     output reg          cout,          // 1 bit carry out           (output)
     output reg          overflow       // 1 bit overflow            (output)
     );
 
     localparam [3:0] OP_AND=4'b0000, OP_OR=4'b0001, OP_ADD=4'b0010, OP_SUB=4'b0110, OP_NOR=4'b1100, OP_NAND=4'b1101, OP_SLT=4'b0111;
+    localparam [1:0] SOP_AND = 2'b00, SOP_OR = 2'b01, SOP_ADD = 2'b10, SOP_LESS = 2'b11;
     reg [31:0]      a;
     reg [31:0]      b;
     reg             a_invert;
@@ -45,6 +46,31 @@ module alu(
     wire carry_ins[32:0];
     wire set_less;
     assign carry_ins[0] = first_cin;
+
+    //overflow detection
+    always @(*) begin
+        //adding two same-signed integers coming up with different sign
+        if( ALU_control == OP_ADD && (a[31]~^b[31]) && (result[31]^a[b]) )begin
+            overflow = 1;
+        end
+        //substracting two different-signed integers coming up with same sign with a
+        else if ( ALU_control == OP_SUB && (a[31]^b[31]) && (result[31]~^a[31]) )begin
+            overflow = 1;
+        end
+        else begin
+            overflow = 0;
+        end
+    end
+
+    //set up zero flag
+    always @(*) begin
+        if (result == 0)begin
+            zero = 1;
+        end
+        else begin
+            zero = 0;
+        end
+    end
 
     //get data when rst_n = 1
     always @(*) begin
@@ -72,15 +98,43 @@ module alu(
     always @(*) begin
         if(rst_n == 1)begin
             case (ALU_control)
+                OP_AND: begin
+                    a_invert = 1'b0;
+                    b_invert = 1'b0;
+                    operation = SOP_AND;
+                end
+                OP_OR:begin
+                    a_invert = 1'b0;
+                    b_invert = 1'b0;
+                    operation = SOP_OR;
+                end
+
+                OP_NOR:begin
+                    a_invert = 1'b1;
+                    b_invert = 1'b1;
+                    operation = SOP_AND;
+                end
+                OP_NAND:begin
+                    a_invert = 1'b1;
+                    b_invert = 1'b1;
+                    operation = SOP_OR;
+                end
+
                 OP_ADD: begin
                     a_invert = 1'b0;
                     b_invert = 1'b0;
-                    operation = 2'b10;
+                    operation = SOP_ADD;
                 end
                 OP_SUB: begin
                     a_invert = 1'b0;
                     b_invert = 1'b1;
-                    operation = 2'b10;
+                    operation = SOP_ADD;
+                end
+
+                OP_SLT: begin
+                    a_invert = 1'b0;
+                    b_invert = 1'b1;
+                    operation = SOP_LESS;
                 end
             endcase
         end
@@ -114,7 +168,7 @@ module alu(
                     .cin(carry_ins[i]),
                     .operation(operation),
                     .result(result[i]),
-                    .cout(carry_ins[i+1]),
+                    .cout(cout),        //connect to the final carry out
                     .set_less(set_less) //connect to the less of the first module
                     );
             end
