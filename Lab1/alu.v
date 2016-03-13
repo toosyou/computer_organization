@@ -28,9 +28,9 @@ module alu(
     input [31:0]        src2,          // 32 bits source 2          (input)
     input [3:0]         ALU_control,   // 4 bits ALU control input  (input)
                     //bonus_control, // 3 bits bonus control input(input)
-    output reg [31:0]   result,        // 32 bits result            (output)
+    output [31:0]       result,        // 32 bits result            (output)
     output reg          zero,          // 1 bit when the output is 0, zero must be set (output)
-    output reg          cout,          // 1 bit carry out           (output)
+    output              cout,          // 1 bit carry out           (output)
     output reg          overflow       // 1 bit overflow            (output)
     );
 
@@ -162,7 +162,7 @@ module alu(
                 alu_top one_bit_alu(
                     .src1(a[i]),
                     .src2(b[i]),
-                    .less(0),
+                    .less(1'b0),
                     .A_invert(a_invert),
                     .B_invert(b_invert),
                     .cin(carry_ins[i]),
@@ -176,7 +176,7 @@ module alu(
                 alu_top one_bit_alu(
                     .src1(a[i]),
                     .src2(b[i]),
-                    .less(0),
+                    .less(1'b0),
                     .A_invert(a_invert),
                     .B_invert(b_invert),
                     .cin(carry_ins[i]),
