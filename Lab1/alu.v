@@ -49,12 +49,12 @@ module alu(
 
     //overflow detection
     always @(*) begin
-        //adding two same-signed integers coming up with different sign
-        if( ALU_control == OP_ADD && (a[31]~^b[31]) && (result[31]^a[b]) )begin
+        //adding two same-signed integers but coming up with different sign
+        if( ALU_control == OP_ADD && (a[31]~^b[31]) && (result[31]^a[31]) )begin
             overflow = 1;
         end
-        //substracting two different-signed integers coming up with same sign with a
-        else if ( ALU_control == OP_SUB && (a[31]^b[31]) && (result[31]~^a[31]) )begin
+        //substracting two different-signed integers but coming up with different sign with a
+        else if ( ALU_control == OP_SUB && (a[31]^b[31]) && (result[31]^a[31]) )begin
             overflow = 1;
         end
         else begin
@@ -88,6 +88,9 @@ module alu(
                     first_cin = 1'b0;
                 end
                 OP_SUB: begin
+                    first_cin = 1'b1;
+                end
+                OP_SLT: begin
                     first_cin = 1'b1;
                 end
             endcase
