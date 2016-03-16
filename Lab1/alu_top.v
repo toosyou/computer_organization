@@ -31,7 +31,7 @@ module alu_top(
     assign cout = g | (p&cin);
     assign add_result = a ^ b ^ cin;
     assign set_less = add_result;
-    assign set_equal = !add_result & equal;
+    assign set_equal = lsb? !add_result: (!add_result & equal);
 
     always @(*) begin
         case(operation)
