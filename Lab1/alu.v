@@ -46,7 +46,7 @@ module alu(
 
     //set up zero flag
     always @(*) begin
-        if (!(|result) begin
+        if (!(|result)) begin
             zero = 1;
         end
         else begin
