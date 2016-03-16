@@ -1,33 +1,12 @@
 //0316055_0316313
-
 `timescale 1ns/1ps
-
-//////////////////////////////////////////////////////////////////////////////////
-// Company:
-// Engineer:
-//
-// Create Date:    15:15:11 02/25/2016
-// Design Name:
-// Module Name:    alu
-// Project Name:
-// Target Devices:
-// Tool versions:
-// Description:
-//
-// Dependencies:
-//
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-//
-//////////////////////////////////////////////////////////////////////////////////
 
 module alu(
     input               rst_n,         // negative reset            (input)
     input [31:0]        src1,          // 32 bits source 1          (input)
     input [31:0]        src2,          // 32 bits source 2          (input)
     input [3:0]         ALU_control,   // 4 bits ALU control input  (input)
-                    //bonus_control, // 3 bits bonus control input(input)
+    input [2:0]         bonus_control, // 3 bits bonus control input(input)
     output [31:0]       result,        // 32 bits result            (output)
     output reg          zero,          // 1 bit when the output is 0, zero must be set (output)
     output              cout,          // 1 bit carry out           (output)
@@ -45,7 +24,10 @@ module alu(
 
     wire carry_ins[32:0];
     wire set_less;
+    wire equal;
+    
     assign carry_ins[0] = first_cin;
+    assign equal = (a==b);
 
     //overflow detection
     always @(*) begin
@@ -64,7 +46,7 @@ module alu(
 
     //set up zero flag
     always @(*) begin
-        if (result == 0)begin
+        if (!(|result) begin
             zero = 1;
         end
         else begin
@@ -74,7 +56,7 @@ module alu(
 
     //get data when rst_n = 1
     always @(*) begin
-        if(rst_n == 1)begin
+        if(rst_n == 1) begin
             a = src1;
             b = src2;
         end
@@ -153,10 +135,12 @@ module alu(
                     .src1(a[i]),
                     .src2(b[i]),
                     .less(set_less), // connect to the set_less of the last module
+                    .equal(equal),
                     .A_invert(a_invert),
                     .B_invert(b_invert),
                     .cin(carry_ins[i]),
                     .operation(operation),
+                    .comp_sel(bonus_control),
                     .result(result[i]),
                     .cout(carry_ins[i+1])
                     );
@@ -166,10 +150,12 @@ module alu(
                     .src1(a[i]),
                     .src2(b[i]),
                     .less(1'b0),
+                    .equal(1'b0),
                     .A_invert(a_invert),
                     .B_invert(b_invert),
                     .cin(carry_ins[i]),
                     .operation(operation),
+                    .comp_sel(bonus_control),
                     .result(result[i]),
                     .cout(cout),        //connect to the final carry out
                     .set_less(set_less) //connect to the less of the first module
@@ -180,10 +166,12 @@ module alu(
                     .src1(a[i]),
                     .src2(b[i]),
                     .less(1'b0),
+                    .equal(1'b0),
                     .A_invert(a_invert),
                     .B_invert(b_invert),
                     .cin(carry_ins[i]),
                     .operation(operation),
+                    .comp_sel(bonus_control),
                     .result(result[i]),
                     .cout(carry_ins[i+1])
                     );
