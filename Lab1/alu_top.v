@@ -11,9 +11,11 @@ module alu_top(
     input           cin,        //1 bit carry in (input)
     input [1:0]     operation,  //operation      (input)
     input [2:0]     comp_sel,
+    input           lsb,        //if it is LSB
     output reg      result,     //1 bit result   (output)
-    output          cout,      //1 bit carry out(output)
-    output          set_less    //set less for the first alu_top
+    output          cout,       //1 bit carry out(output)
+    output          set_less,   //set less for the first alu_top
+    output          set_equal
     );
 
     localparam [1:0] OP_AND = 2'b00, OP_OR = 2'b01, OP_ADD = 2'b10, OP_LESS = 2'b11;
@@ -29,6 +31,7 @@ module alu_top(
     assign cout = g | (p&cin);
     assign add_result = a ^ b ^ cin;
     assign set_less = add_result;
+    assign set_equal = !add_result & equal;
 
     always @(*) begin
         case(operation)
@@ -39,20 +42,25 @@ module alu_top(
             OP_ADD:
                 result = add_result;
             OP_LESS: begin
-                case(comp_sel)
-                    CMP_SLT:
-                        result = less;
-                    CMP_SGT:
-                        result = !less && !equal;
-                    CMP_SLE:
-                        result = less || equal;
-                    CMP_SGE:
-                        result = !less;
-                    CMP_SEQ:
-                        result = equal;
-                    CMP_SNE:
-                        result = !equal;
-                endcase
+                if (lsb) begin
+                    case(comp_sel)
+                        CMP_SLT:
+                            result = less;
+                        CMP_SGT:
+                            result = !less && !equal;
+                        CMP_SLE:
+                            result = less || equal;
+                        CMP_SGE:
+                            result = !less;
+                        CMP_SEQ:
+                            result = equal;
+                        CMP_SNE:
+                            result = !equal;
+                    endcase
+                end
+                else begin
+                    result = 0;
+                end
             end
                 
         endcase

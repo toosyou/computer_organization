@@ -23,11 +23,12 @@ module alu(
     reg [1:0]       operation;
 
     wire carry_ins[32:0];
+    wire set_equal[31:0];
     wire set_less;
-    wire equal;
+    //wire equal;
     
     assign carry_ins[0] = first_cin;
-    assign equal = (a==b);
+    //assign equal = (a==b);
 
     //overflow detection
     always @(*) begin
@@ -135,45 +136,48 @@ module alu(
                     .src1(a[i]),
                     .src2(b[i]),
                     .less(set_less), // connect to the set_less of the last module
-                    .equal(equal),
+                    .equal(set_equal[31]),
                     .A_invert(a_invert),
                     .B_invert(b_invert),
                     .cin(carry_ins[i]),
                     .operation(operation),
                     .comp_sel(bonus_control),
+                    .lsb(1),
                     .result(result[i]),
-                    .cout(carry_ins[i+1])
+                    .cout(carry_ins[i+1]),
+                    .set_equal(set_equal[i])
                     );
             end
             else if( i == 31 )begin //last module
                 alu_top one_bit_alu(
                     .src1(a[i]),
                     .src2(b[i]),
-                    .less(1'b0),
-                    .equal(1'b0),
+                    .equal(set_equal[i-1]),
                     .A_invert(a_invert),
                     .B_invert(b_invert),
                     .cin(carry_ins[i]),
                     .operation(operation),
-                    .comp_sel(bonus_control),
+                    .lsb(0),
                     .result(result[i]),
                     .cout(cout),        //connect to the final carry out
-                    .set_less(set_less) //connect to the less of the first module
+                    .set_less(set_less), //connect to the less of the first module
+                    .set_equal(set_equal[i])
                     );
             end
             else begin
                 alu_top one_bit_alu(
                     .src1(a[i]),
                     .src2(b[i]),
-                    .less(1'b0),
-                    .equal(1'b0),
+                    .equal(set_equal[i-1]),
                     .A_invert(a_invert),
                     .B_invert(b_invert),
                     .cin(carry_ins[i]),
                     .operation(operation),
                     .comp_sel(bonus_control),
+                    .lsb(0),
                     .result(result[i]),
-                    .cout(carry_ins[i+1])
+                    .cout(carry_ins[i+1]),
+                    .set_equal(set_equal[i])
                     );
             end
         end
