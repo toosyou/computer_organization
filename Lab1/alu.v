@@ -34,24 +34,24 @@ module alu(
     always @(*) begin
         //adding two same-signed integers but coming up with different sign
         if( ALU_control == OP_ADD && (a[31]~^b[31]) && (result[31]^a[31]) )begin
-            overflow = 1;
+            overflow = 1'b1;
         end
         //substracting two different-signed integers but coming up with different sign with a
         else if ( ALU_control == OP_SUB && (a[31]^b[31]) && (result[31]^a[31]) )begin
-            overflow = 1;
+            overflow = 1'b1;
         end
         else begin
-            overflow = 0;
+            overflow = 1'b0;
         end
     end
 
     //set up zero flag
     always @(*) begin
         if (!(|result)) begin
-            zero = 1;
+            zero = 1'b1;
         end
         else begin
-            zero = 0;
+            zero = 1'b0;
         end
     end
 
@@ -142,7 +142,7 @@ module alu(
                     .cin(carry_ins[i]),
                     .operation(operation),
                     .comp_sel(bonus_control),
-                    .lsb(1),
+                    .lsb(1'b1),
                     .result(result[i]),
                     .cout(carry_ins[i+1]),
                     .set_equal(set_equal[i])
@@ -157,7 +157,7 @@ module alu(
                     .B_invert(b_invert),
                     .cin(carry_ins[i]),
                     .operation(operation),
-                    .lsb(0),
+                    .lsb(1'b0),
                     .result(result[i]),
                     .cout(cout),        //connect to the final carry out
                     .set_less(set_less), //connect to the less of the first module
@@ -174,7 +174,7 @@ module alu(
                     .cin(carry_ins[i]),
                     .operation(operation),
                     .comp_sel(bonus_control),
-                    .lsb(0),
+                    .lsb(1'b0),
                     .result(result[i]),
                     .cout(carry_ins[i+1]),
                     .set_equal(set_equal[i])
