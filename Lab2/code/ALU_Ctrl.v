@@ -22,7 +22,7 @@ module ALU_Ctrl(
 	input   [3-1:0] ALUOp_i;
 
 	output  [4-1:0] ALUCtrl_o;
-	output reg shamt_ctrl_o;
+	output reg[1:0] shamt_ctrl_o;
 	     
 	//Internal Signals
 	reg     [4-1:0] ALUCtrl_o;
