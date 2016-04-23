@@ -39,6 +39,10 @@ wire [31:0] aluSrc2;
 wire [31:0] aluResult;
 wire        aluZero;
 
+wire [31:0] pc_next;
+wire [31:0] pc_shift;
+wire [31:0] pc_branch;
+
 //Greate componentes
 ProgramCounter PC(
     .clk_i(clk_i),      
@@ -50,7 +54,7 @@ ProgramCounter PC(
 Adder Adder1(
     .src1_i(32'd4),     
 	.src2_i(pc_out),     
-	.sum_o()    
+	.sum_o(pc_next)    
 	);
 	
 Instr_Memory IM(
@@ -113,21 +117,21 @@ ALU ALU(
 	);
 		
 Adder Adder2(
-    .src1_i(),     
-	.src2_i(),     
-	.sum_o()      
+    .src1_i(pc_next),     
+	.src2_i(pc_shift),     
+	.sum_o(pc_branch)      
 	);
 		
 Shift_Left_Two_32 Shifter(
-    .data_i(),
-    .data_o()
+    .data_i(constant),
+    .data_o(pc_shift)
     ); 		
 		
 MUX_2to1 #(.size(32)) Mux_PC_Source(
-    .data0_i(),
-    .data1_i(),
+    .data0_i(pc_next),
+    .data1_i(pc_branch),
     .select_i(branch&aluZero),
-    .data_o()
+    .data_o(pc_in)
     );	
 
 endmodule
