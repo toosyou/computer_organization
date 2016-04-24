@@ -7,11 +7,11 @@ module ALU(
 	);
 
 	//I/O ports
-	input  [32-1:0]	src1_i;
-	input  [32-1:0]	src2_i;
+	input  signed [32-1:0]	src1_i;
+	input  signed [32-1:0]	src2_i;
 	input  [4-1:0]  ctrl_i;
 
-	output [32-1:0] result_o;
+	output signed [32-1:0] result_o;
 	output          zero_o;
 
 	//Internal signals
@@ -33,8 +33,8 @@ module ALU(
 			OP_SUB:	result_o <= src1_i - src2_i;
 			OP_SLT:	result_o <= (src1_i<src2_i)? 1: 0;
 			OP_SHR:	result_o <= src2_i >>> src1_i;
-			OP_LUI:	result_o <= src2_i;
-			OP_BNE:	result_o <= src1_i == src2_i;
+			OP_LUI:	result_o <= src2_i << 16;
+			OP_BNE:	result_o <= (src1_i == src2_i);
 			default:result_o <= 0;
 		endcase
 	end

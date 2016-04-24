@@ -93,14 +93,14 @@ module Decoder(
 			end
 			INSTR_LUI:begin
 				RegDst_o		= 0;
-				ALUSrc_o		= 0;
+				ALUSrc_o		= 1;
 				RegWrite_o		= 1;
 				Branch_o		= 0;
 				ALU_op_o		= ALUOP_LUI;
 			end
 			INSTR_ORI:begin
 				RegDst_o		= 0;
-				ALUSrc_o		= 0;
+				ALUSrc_o		= 1; // don't care
 				RegWrite_o		= 1;
 				Branch_o		= 0;
 				ALU_op_o		= ALUOP_ORI;
@@ -111,6 +111,9 @@ module Decoder(
 				RegWrite_o		= 0;
 				Branch_o		= 1;
 				ALU_op_o		= ALUOP_BNE;
+			end
+			default:begin
+				RegWrite_o = 0;
 			end
 
 		endcase

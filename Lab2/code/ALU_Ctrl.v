@@ -87,9 +87,9 @@ module ALU_Ctrl(
 	//use shamt as input
 	always@(*)begin
 		if( ALUOp_i == ALUOP_R && funct_i == 3 )
-			shamt_ctrl_o = 2; // shamt
-		else if( ALUOp_i == ALUOP_ORI && funct_i == 0 )
-			shamt_ctrl_o = 1; // zero-extended immediate
+			shamt_ctrl_o = 2'b01; // shamt
+		else if( ALUOp_i == ALUOP_ORI  )
+			shamt_ctrl_o = 2'b10; // zero-extended immediate
 		else
 			shamt_ctrl_o = 0;
 	end
