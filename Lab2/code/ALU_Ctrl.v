@@ -53,33 +53,33 @@ module ALU_Ctrl(
 		case( ALUOp_i )
 			ALUOP_R:begin
 				case( funct_i )
-					// add r1,r2,r3
+					// add rd,rs,rt
 					32:ALUCtrl_o = CTRL_ADD;
-					// sub r1,r2,r3
+					// sub rd,rs,rt
 					34:ALUCtrl_o = CTRL_SUB;
-					// and r1,r2,r3
+					// and rd,rs,rt
 					36:ALUCtrl_o = CTRL_AND;
-					// or r1,r2,r3
+					// or rd,rs,rt
 					37:ALUCtrl_o = CTRL_OR;
-					// slt r1,r2,r3
+					// slt rd,rs,rt
 					42:ALUCtrl_o = CTRL_SLT;
-					// sra r1,r2,shmat
+					// sra rd,rt,shamt
 					3:ALUCtrl_o = CTRL_SHR;
-					// srav r1,r2,r3
+					// srav rd,rt,rs
 					7:ALUCtrl_o = CTRL_SHR;
 				endcase
 			end
-			//addi r1,r2,100
+			//addi rt,rs,se100
 			ALUOP_ADDI:ALUCtrl_o = CTRL_ADD;
-			//sltiu r1,r2,10
+			//sltiu rt,rs,ze10
 			ALUOP_SLTIU:ALUCtrl_o = CTRL_SLT;
-			//beq r1,r2,25
+			//beq rs,rt,se25
 			ALUOP_BEQ:ALUCtrl_o = CTRL_SUB;
-			//lui r1,10
+			//lui rt,10
 			ALUOP_LUI:ALUCtrl_o = CTRL_LUI;
-			//ori r1,r2,100
+			//ori rt,rs,ze100
 			ALUOP_ORI:ALUCtrl_o = CTRL_OR;
-			//bne r1,r2,30
+			//bne rs,rt,se30
 			ALUOP_BNE:ALUCtrl_o = CTRL_BNE;
 		endcase
 	end
@@ -88,10 +88,10 @@ module ALU_Ctrl(
 	always@(*)begin
 		if( ALUOp_i == ALUOP_R && funct_i == 3 )
 			shamt_ctrl_o = 2'b01; // shamt
-		else if( ALUOp_i == ALUOP_ORI  )
+		else if( ALUOp_i == ALUOP_ORI || ALUOp_i == ALUOP_SLTIU )
 			shamt_ctrl_o = 2'b10; // zero-extended immediate
 		else
-			shamt_ctrl_o = 0;
+			shamt_ctrl_o = 2'b00;
 	end
 
 endmodule     

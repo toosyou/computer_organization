@@ -93,7 +93,7 @@ module Decoder(
 			end
 			INSTR_LUI:begin
 				RegDst_o		= 0;
-				ALUSrc_o		= 1;
+				ALUSrc_o		= 1; // don't care
 				RegWrite_o		= 1;
 				Branch_o		= 0;
 				ALU_op_o		= ALUOP_LUI;

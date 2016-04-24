@@ -18,11 +18,11 @@ module Adder(
      
 //I/O ports
 input  signed [32-1:0]  src1_i;
-input  signed [32-1:0]	 src2_i;
-output signed [32-1:0]	 sum_o;
+input  signed [32-1:0]	src2_i;
+output signed [32-1:0]	sum_o;
 
 //Internal Signals
-wire    [32-1:0]	 sum_o;
+wire    	  [32-1:0]	sum_o;
 
 //Parameter
     
