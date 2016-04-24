@@ -31,11 +31,16 @@ wire        regDst;
 wire        branch;
 
 wire        aluCtrl;
+wire [ 1:0] shamtCtrl;
 
 wire [31:0] RSdata;
 wire [31:0] RTdata;
-wire [31:0] constant;
+wire [31:0] seConstant;
+wire [31:0] zeConstant;
+wire [31:0] shamt;
+wire [31:0] aluSrc1;
 wire [31:0] aluSrc2;
+wire [31:0] aluSrc2_shift;
 wire [31:0] aluResult;
 wire        aluZero;
 
@@ -71,9 +76,9 @@ MUX_2to1 #(.size(5)) Mux_Write_Reg(
 		
 Reg_File RF(
     .clk_i(clk_i),      
-    .rst_i(rst_i) ,     
-    .RSaddr_i(instr[25:21]),  
-    .RTaddr_i(instr[20:16]),  
+    .rst_i(rst_i), 
+    .RSaddr_i(instr[25:21]),
+    .RTaddr_i(instr[20:16]),
     .RDaddr_i(writeReg),  
     .RDdata_i(result), 
     .RegWrite_i(regWrite),
@@ -93,24 +98,49 @@ Decoder Decoder(
 ALU_Ctrl AC(
     .funct_i(instr[5:0]),   
     .ALUOp_i(aluOp),   
-    .ALUCtrl_o(aluCtrl) 
-    );
-	
-Sign_Extend SE(
-    .data_i(instr[15:0]),
-    .data_o(constant)
+    .ALUCtrl_o(aluCtrl),
+    .shamt_ctrl_o(shamtCtrl)
     );
 
-MUX_2to1 #(.size(32)) Mux_ALUSrc(
+Zero_Extend_32 #(.size(5)) Shamt(
+    .data_i(instr[10:6]),
+    .data_o(shamt)
+    );
+	
+Sign_Extend #(.size(16)) SE(
+    .data_i(instr[15:0]),
+    .data_o(seConstant)
+    );
+
+Zero_Extend_32 #(.size(16)) ZE(
+    .data_i(instr[15:0]),
+    .data_o(zeConstant)
+    );
+
+MUX_2to1 #(.size(32)) Mux_ALUSrc1(
+    .data0_i(RSdata),
+    .data1_i(shamt),
+    .select_i(shamtCtrl[0]),
+    .data_o(aluSrc1)
+    );
+
+MUX_2to1 #(.size(32)) Mux_ALUSrc2(
     .data0_i(RTdata),
-    .data1_i(constant),
+    .data1_i(seConstant),
     .select_i(aluSrc),
     .data_o(aluSrc2)
-    );	
+    );
+
+MUX_2to1 #(.size(32)) Mux_ALUSrc2_shift(
+    .data0_i(aluSrc2),
+    .data1_i(zeConstant),
+    .select_i(shamtCtrl[1]),
+    .data_o(aluSrc2_shift)
+    );
 		
 ALU ALU(
-    .src1_i(RSdata),
-	.src2_i(aluSrc2),
+    .src1_i(aluSrc1),
+	.src2_i(aluSrc2_shift),
 	.ctrl_i(aluCtrl),
 	.result_o(aluResult),
 	.zero_o(aluZero)
@@ -123,7 +153,7 @@ Adder Adder2(
 	);
 		
 Shift_Left_Two_32 Shifter(
-    .data_i(constant),
+    .data_i(seConstant),
     .data_o(pc_shift)
     ); 		
 		
