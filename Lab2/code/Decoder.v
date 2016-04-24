@@ -63,49 +63,49 @@ module Decoder(
 	//Main function
 	always@(*)begin
 		case( instr_op_i )
-			case INSTR_ZERO:begin // r-type instr: add, sub, and, or, slt
+			INSTR_ZERO:begin // r-type instr: add, sub, and, or, slt
 				RegDst_o		= 1;
 				ALUSrc_o		= 0;
 				RegWrite_o		= 1;
 				Branch_o		= 0;
 				ALU_op_o		= ALUOP_R;
 			end
-			case INSTR_ADDI:begin
+			INSTR_ADDI:begin
 				RegDst_o		= 0;
 				ALUSrc_o		= 1;
 				RegWrite_o		= 1;
 				Branch_o		= 0;
 				ALU_op_o		= ALUOP_ADDI;
 			end
-			case INSTR_SLTIU:begin
+			INSTR_SLTIU:begin
 				RegDst_o		= 0;
 				ALUSrc_o		= 1;
 				RegWrite_o		= 1;
 				Branch_o		= 0;
 				ALU_op_o		= ALUOP_SLTIU;
 			end
-			case INSTR_BEQ:begin
+			INSTR_BEQ:begin
 				RegDst_o		= 0; // don't care
 				ALUSrc_o		= 0;
 				RegWrite_o		= 0;
 				Branch_o		= 1;
 				ALU_op_o		= ALUOP_BEQ;
 			end
-			case INSTR_LUI:begin
+			INSTR_LUI:begin
 				RegDst_o		= 0;
 				ALUSrc_o		= 0;
 				RegWrite_o		= 1;
 				Branch_o		= 0;
 				ALU_op_o		= ALUOP_LUI;
 			end
-			case INSTR_ORI:begin
+			INSTR_ORI:begin
 				RegDst_o		= 0;
 				ALUSrc_o		= 0;
 				RegWrite_o		= 1;
 				Branch_o		= 0;
 				ALU_op_o		= ALUOP_ORI;
 			end
-			case INSTR_BNE:begin
+			INSTR_BNE:begin
 				RegDst_o		= 0; // don't care
 				ALUSrc_o		= 0;
 				RegWrite_o		= 0;

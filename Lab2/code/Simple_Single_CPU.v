@@ -12,8 +12,8 @@
 module Simple_Single_CPU(
     clk_i,
     rst_i
-	);
-		
+    );
+        
 //I/O port
 input   clk_i;
 input   rst_i;
@@ -30,7 +30,7 @@ wire        aluSrc;
 wire        regDst;
 wire        branch;
 
-wire        aluCtrl;
+wire [ 3:0] aluCtrl;
 wire [ 1:0] shamtCtrl;
 
 wire [31:0] RSdata;
@@ -51,29 +51,29 @@ wire [31:0] pc_branch;
 //Greate componentes
 ProgramCounter PC(
     .clk_i(clk_i),      
-	.rst_i (rst_i),     
-	.pc_in_i(pc_in) ,   
-	.pc_out_o(pc_out) 
-	);
-	
+    .rst_i (rst_i),     
+    .pc_in_i(pc_in) ,   
+    .pc_out_o(pc_out) 
+    );
+    
 Adder Adder1(
     .src1_i(32'd4),     
-	.src2_i(pc_out),     
-	.sum_o(pc_next)    
-	);
-	
+    .src2_i(pc_out),     
+    .sum_o(pc_next)    
+    );
+    
 Instr_Memory IM(
     .pc_addr_i(pc_out),  
-	.instr_o(instr)    
-	);
+    .instr_o(instr)    
+    );
 
 MUX_2to1 #(.size(5)) Mux_Write_Reg(
     .data0_i(instr[20:16]),
     .data1_i(instr[15:11]),
     .select_i(regDst),
     .data_o(writeReg)
-    );	
-		
+    );  
+        
 Reg_File RF(
     .clk_i(clk_i),      
     .rst_i(rst_i), 
@@ -85,15 +85,15 @@ Reg_File RF(
     .RSdata_o(RSdata),  
     .RTdata_o(RTdata)   
     );
-	
+    
 Decoder Decoder(
     .instr_op_i(instr[31:26]), 
-	.RegWrite_o(regWrite), 
-	.ALU_op_o(aluOp),   
-	.ALUSrc_o(aluSrc),   
-	.RegDst_o(regDst),   
-	.Branch_o(branch)   
-	);
+    .RegWrite_o(regWrite), 
+    .ALU_op_o(aluOp),   
+    .ALUSrc_o(aluSrc),   
+    .RegDst_o(regDst),   
+    .Branch_o(branch)   
+    );
 
 ALU_Ctrl AC(
     .funct_i(instr[5:0]),   
@@ -106,8 +106,8 @@ Zero_Extend_32 #(.size(5)) Shamt(
     .data_i(instr[10:6]),
     .data_o(shamt)
     );
-	
-Sign_Extend #(.size(16)) SE(
+    
+Sign_Extend SE(
     .data_i(instr[15:0]),
     .data_o(seConstant)
     );
@@ -137,34 +137,34 @@ MUX_2to1 #(.size(32)) Mux_ALUSrc2_shift(
     .select_i(shamtCtrl[1]),
     .data_o(aluSrc2_shift)
     );
-		
+        
 ALU ALU(
     .src1_i(aluSrc1),
-	.src2_i(aluSrc2_shift),
-	.ctrl_i(aluCtrl),
-	.result_o(aluResult),
-	.zero_o(aluZero)
-	);
-		
+    .src2_i(aluSrc2_shift),
+    .ctrl_i(aluCtrl),
+    .result_o(aluResult),
+    .zero_o(aluZero)
+    );
+        
 Adder Adder2(
     .src1_i(pc_next),     
-	.src2_i(pc_shift),     
-	.sum_o(pc_branch)      
-	);
-		
+    .src2_i(pc_shift),     
+    .sum_o(pc_branch)      
+    );
+        
 Shift_Left_Two_32 Shifter(
     .data_i(seConstant),
     .data_o(pc_shift)
-    ); 		
-		
+    );      
+        
 MUX_2to1 #(.size(32)) Mux_PC_Source(
     .data0_i(pc_next),
     .data1_i(pc_branch),
     .select_i(branch&aluZero),
     .data_o(pc_in)
-    );	
+    );  
 
 endmodule
-		  
+          
 
 
