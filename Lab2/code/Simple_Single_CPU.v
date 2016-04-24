@@ -80,7 +80,7 @@ Reg_File RF(
     .RSaddr_i(instr[25:21]),
     .RTaddr_i(instr[20:16]),
     .RDaddr_i(writeReg),  
-    .RDdata_i(result), 
+    .RDdata_i(aluResult), 
     .RegWrite_i(regWrite),
     .RSdata_o(RSdata),  
     .RTdata_o(RTdata)   
