@@ -37,6 +37,7 @@ module ALU_Ctrl(
 	parameter CTRL_SHR		= 4'b1000;
 	parameter CTRL_LUI		= 4'b1001;
 	parameter CTRL_BNE		= 4'b1010;
+	parameter CTRL_IDLE		= 4'b1111;
 
 
 	parameter ALUOP_R 		= 2;
@@ -67,6 +68,8 @@ module ALU_Ctrl(
 					3:ALUCtrl_o = CTRL_SHR;
 					// srav rd,rt,rs
 					7:ALUCtrl_o = CTRL_SHR;
+					// all zero
+					default:ALUCtrl_o = CTRL_IDLE;
 				endcase
 			end
 			//addi rt,rs,se100
