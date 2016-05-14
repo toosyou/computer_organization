@@ -23,12 +23,18 @@ wire [31:0] pc_out;
 wire [31:0] instr;
 
 wire [ 4:0] writeReg;
-wire        regWrite;
-wire [ 2:0] aluOp;
-wire        aluSrc;
+
+//decoder
 wire        regDst;
 wire        branch;
+wire        memToReg;
+wire [ 2:0] branchType;
 wire        jump;
+wire        memRead;
+wire        memWrite;
+wire [ 2:0] aluOp;
+wire        aluSrc;
+wire        regWrite;
 
 wire [ 3:0] aluCtrl;
 wire [ 1:0] shamtCtrl;
@@ -51,6 +57,10 @@ wire [31:0] pc_mux1;
 wire [27:0] jump_address_tmp;
 wire [31:0] jump_address;
 wire [3:0] dontcare;
+
+//data memory
+wire [31:0] readDataDM;
+wire [31:0] writeData;
 
 assign jump_address = { pc_out[31:28], jump_address_tmp };
 
@@ -121,7 +131,7 @@ Reg_File RF(
     .RSaddr_i(instr[25:21]),
     .RTaddr_i(instr[20:16]),
     .RDaddr_i(writeReg),
-    .RDdata_i(aluResult),
+    .RDdata_i(writeData),
     .RegWrite_i(regWrite),
     .RSdata_o(RSdata),
     .RTdata_o(RTdata)
@@ -141,6 +151,22 @@ ALU_Ctrl AC(
     .ALUOp_i(aluOp),
     .ALUCtrl_o(aluCtrl),
     .shamt_ctrl_o(shamtCtrl)
+    );
+
+Data_Memory DM(
+    .clk_i(clk_i),
+    .addr_i(aluResult),
+    .data_i(RTdata),
+    .MemRead_i(memRead),
+    .MemWrite_i(memWrite),
+    .data_o(readDataDM)
+    );
+
+MUX_3to1 #(.size(32)) Mux_Write_Data(
+    .data1_i(readDataDM),
+    .data2_i(seConstant),
+    .select_i(memToReg),
+    .data_o(writeData)
     );
 
 Zero_Extend_32 #(.size(5)) Shamt(
