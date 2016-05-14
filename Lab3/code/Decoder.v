@@ -27,28 +27,16 @@ module Decoder(
 	//I/O ports
 	input  [6-1:0] instr_op_i;
 
-	output         RegWrite_o;
-	output [3-1:0] ALU_op_o;
-	output         ALUSrc_o;
-	output         RegDst_o;
-	output         Branch_o;
-	output [2-1:0] BranchType_o;
-	output		   Jump_o;
-	output		   MemRead_o;
-	output		   MemWrite_o;
-	output		   MemtoReg_o;
-	 
-	//Internal Signals
-	reg    [3-1:0] ALU_op_o;
-	reg            ALUSrc_o;
-	reg            RegWrite_o;
-	reg            RegDst_o;
-	reg            Branch_o;
-	reg    [2-1:0] BranchType_o;
-	reg		   	   Jump_o;
-	reg		   	   MemRead_o;
-	reg		   	   MemWrite_o;
-	reg 		   MemtoReg_o;
+	output reg         RegWrite_o;
+	output reg [3-1:0] ALU_op_o;
+	output reg 		   ALUSrc_o;
+	output reg         RegDst_o;
+	output reg         Branch_o;
+	output reg [2-1:0] BranchType_o;
+	output reg		   Jump_o;
+	output reg		   MemRead_o;
+	output reg		   MemWrite_o;
+	output reg		   MemtoReg_o;
 
 	//Parameter of Instruction
 	parameter INSTR_R 		= 0;
@@ -73,6 +61,12 @@ module Decoder(
 	parameter ALUOP_ORI 	= 7;
 	parameter ALUOP_BRANCH 	= 1;
 	parameter ALUOP_LI 		= 6;
+
+	//Parameter of branch type
+	parameter BRH_ZERO1			= 0;
+	parameter BRH_ZERO0			= 1;
+	parameter BRH_RESULT1_ZERO1	= 2;
+	parameter BRH_RESULT1		= 3;	
 
 	//Main function
 	always@(*)begin
@@ -113,7 +107,7 @@ module Decoder(
 			INSTR_BEQ: begin
 				Jump_o			<= 0;
 				ALUSrc_o		<= 0;
-				Branch_o		<= 2'b00;
+				Branch_o		<= BRH_ZERO1;
 				BranchType_o	<= 1;
 				ALU_op_o		<= ALUOP_BRANCH;
 				MemWrite_o		<= 0;
@@ -134,7 +128,7 @@ module Decoder(
 			INSTR_BNE: begin
 				Jump_o			<= 0;
 				ALUSrc_o		<= 0;
-				Branch_o		<= 2'b01;
+				Branch_o		<= BRH_ZERO0;
 				BranchType_o	<= 0;
 				ALU_op_o		<= ALUOP_BRANCH;
 				MemWrite_o		<= 0;
@@ -166,12 +160,23 @@ module Decoder(
 				MemWrite_o		<= 0;
 				MemRead_o		<= 0;
 				RegWrite_o		<= 0;
-			end
+			end/*
+			INSTR_JAL: begin
+				Jump_o			<= 0;
+				ALUSrc_o		<= 1;
+				Branch_o		<= 0;
+				ALU_op_o		<= ALUOP_ADDI;
+				MemWrite_o		<= 0;
+				MemRead_o		<= 0;
+				MemtoReg_o		<= 0;
+				RegWrite_o		<= 1;
+				RegDst_o		<= 0;
+			end*/
 			INSTR_BLE: begin
 				Jump_o			<= 0;
 				ALUSrc_o		<= 0;
 				Branch_o		<= 1;
-				BranchType_o	<= 2'b10;
+				BranchType_o	<= BRH_RESULT1_ZERO1;
 				ALU_op_o		<= ALUOP_BRANCH;
 				MemWrite_o		<= 0;
 				MemRead_o		<= 0;
@@ -181,7 +186,7 @@ module Decoder(
 				Jump_o			<= 0;
 				ALUSrc_o		<= 0;
 				Branch_o		<= 1;
-				BranchType_o	<= 2'b11;
+				BranchType_o	<= BRH_RESULT1;
 				ALU_op_o		<= ALUOP_BRANCH;
 				MemWrite_o		<= 0;
 				MemRead_o		<= 0;
