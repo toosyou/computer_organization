@@ -28,6 +28,7 @@ wire [ 2:0] aluOp;
 wire        aluSrc;
 wire        regDst;
 wire        branch;
+wire        jump;
 
 wire [ 3:0] aluCtrl;
 wire [ 1:0] shamtCtrl;
@@ -46,11 +47,16 @@ wire        aluZero;
 wire [31:0] pc_next;
 wire [31:0] pc_shift;
 wire [31:0] pc_branch;
+wire [31:0] pc_mux1;
 wire [27:0] jump_address_tmp;
 wire [31:0] jump_address;
 wire [3:0] dontcare;
 
+assign jump_address = { pc_out[31:28], jump_address_tmp };
+
 //Greate componentes
+
+//pc & jump part
 ProgramCounter PC(
     .clk_i(clk_i),
     .rst_i (rst_i),
@@ -69,8 +75,36 @@ Shift_Left_Two_32 to_jump_address(
     .data_o({dontcare, jump_address_tmp})
     );
 
+
+Adder Adder2(
+    .src1_i(pc_next),
+    .src2_i(pc_shift),
+    .sum_o(pc_branch)
+    );
+
+Shift_Left_Two_32 Shifter(
+    .data_i(seConstant),
+    .data_o(pc_shift)
+    );
+
+MUX_2to1 #(.size(32)) Mux_PC_Source(
+    .data0_i(pc_next),
+    .data1_i(pc_branch),
+    .select_i(branch&aluZero),
+    .data_o(pc_mux1)
+    );
+
+MUX_2to1 #(.size(32)) Mux_PC_Source_Jump(
+    .data0_i(jump_address),
+    .data1_i(pc_mux1),
+    .select_i(jump),
+    .data_o(pc_in)
+    );
+
+//calculating part
+
 Instr_Memory IM(
-    .pc_addr_i(pc_out),
+    .addr_i(pc_out),
     .instr_o(instr)
     );
 
@@ -151,24 +185,6 @@ ALU ALU(
     .ctrl_i(aluCtrl),
     .result_o(aluResult),
     .zero_o(aluZero)
-    );
-
-Adder Adder2(
-    .src1_i(pc_next),
-    .src2_i(pc_shift),
-    .sum_o(pc_branch)
-    );
-
-Shift_Left_Two_32 Shifter(
-    .data_i(seConstant),
-    .data_o(pc_shift)
-    );
-
-MUX_2to1 #(.size(32)) Mux_PC_Source(
-    .data0_i(pc_next),
-    .data1_i(pc_branch),
-    .select_i(branch&aluZero),
-    .data_o(pc_in)
     );
 
 endmodule
