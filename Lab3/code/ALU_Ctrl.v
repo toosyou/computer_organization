@@ -34,19 +34,17 @@ module ALU_Ctrl(
 	parameter ALUOP_ORI 	= 7;
 
 	parameter ALUOP_BRANCH 	= 1;
-	parameter ALUOP_LI 		= 6;
 
 	//Parameter of ALU Control
+	parameter CTRL_IDLE		= 4'b1111;
 	parameter CTRL_ADD 		= 4'b0010;
 	parameter CTRL_SUB 		= 4'b0110;
 	parameter CTRL_AND 		= 4'b0000;
 	parameter CTRL_OR  		= 4'b0001;
 	parameter CTRL_SLT 		= 4'b0111;
 	parameter CTRL_SHR		= 4'b1000;
-	parameter CTRL_IDLE		= 4'b1111;
 	
 	parameter CTRL_MUL		= 4'b0100;
-	parameter CTRL_LI		= 4'b1001;
 
 	//Select exact operation
 	always@(*)begin
@@ -81,8 +79,6 @@ module ALU_Ctrl(
 			ALUOP_ORI: ALUCtrl_o = CTRL_OR;
 			//bne rs, rt, se30
 			ALUOP_BRANCH: ALUCtrl_o = CTRL_SUB;
-			//li rt, 10
-			ALUOP_LI: ALUCtrl_o = CTRL_LI;
 		endcase
 	end
 
