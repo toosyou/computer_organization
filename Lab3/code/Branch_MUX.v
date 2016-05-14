@@ -13,10 +13,10 @@
 module Branch_MUX(
     input branchType_i,
     input zero_i,
-    input result_31_i,
+    input alu_sign_i,
     output reg branch_result_o
     );
 
-    
+
 
 endmodule
