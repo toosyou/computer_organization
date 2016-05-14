@@ -21,7 +21,7 @@ module ALU(
 
 	//Parameter
 	localparam [3:0] OP_AND=4'b0000, OP_OR=4'b0001, OP_ADD=4'b0010, OP_SUB=4'b0110, OP_SLT=4'b0111;
-	localparam [3:0] OP_SHR=4'b1000, OP_IDLE=4'b1111, OP_LI=4'b1001, OP_MUL=4'b0100;
+	localparam [3:0] OP_SHR=4'b1000, OP_IDLE=4'b1111, OP_MUL=4'b0100;
 	
 	//Main function
 	assign zero_o = (result_o==0);	//zero is true if result_o is 0
@@ -36,7 +36,6 @@ module ALU(
 			OP_SLT:	result_o <= (src1_i<src2_i)? 1: 0;
 			OP_SHR:	result_o <= src2_i >>> src1_i;
 			OP_MUL:	result_o <= src1_i * src2_i;
-			OP_LI:	result_o <= src2_i;
 			default: result_o <= 0;
 		endcase
 	end

@@ -60,7 +60,6 @@ module Decoder(
 	parameter ALUOP_SLTIU 	= 4;
 	parameter ALUOP_ORI 	= 7;
 	parameter ALUOP_BRANCH 	= 1;
-	parameter ALUOP_LI 		= 6;
 
 	//Parameter of branch type
 	parameter BRH_ZERO1			= 0;
@@ -194,12 +193,10 @@ module Decoder(
 			end
 			INSTR_LI: begin
 				Jump_o			<= 0;
-				ALUSrc_o		<= 1;
 				Branch_o		<= 0;
-				ALU_op_o		<= ALUOP_LI;
 				MemWrite_o		<= 0;
 				MemRead_o		<= 0;
-				MemtoReg_o		<= 0;
+				MemtoReg_o		<= 2;
 				RegWrite_o		<= 1;
 				RegDst_o		<= 0;
 			end
