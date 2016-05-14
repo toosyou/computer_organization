@@ -106,8 +106,8 @@ MUX_2to1 #(.size(32)) Mux_PC_Source(
     );
 
 MUX_2to1 #(.size(32)) Mux_PC_Source_Jump(
-    .data0_i(jump_address),
-    .data1_i(pc_mux1),
+    .data0_i(pc_mux1),
+    .data1_i(jump_address),
     .select_i(jump),
     .data_o(pc_in)
     );
