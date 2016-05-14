@@ -56,7 +56,8 @@ wire [31:0] pc_branch;
 wire [31:0] pc_mux1;
 wire [27:0] jump_address_tmp;
 wire [31:0] jump_address;
-wire [3:0] dontcare;
+wire        branch_MUX_result;
+wire [3:0] dontcare; // dont care
 
 //data memory
 wire [31:0] readDataDM;
@@ -100,15 +101,22 @@ Shift_Left_Two_32 Shifter(
 MUX_2to1 #(.size(32)) Mux_PC_Source(
     .data0_i(pc_next),
     .data1_i(pc_branch),
-    .select_i(branch&aluZero),
+    .select_i(branch & branch_MUX_result),
     .data_o(pc_mux1)
     );
 
 MUX_2to1 #(.size(32)) Mux_PC_Source_Jump(
-    .data0_i(jump_address),
-    .data1_i(pc_mux1),
+    .data0_i(pc_mux1),
+    .data1_i(jump_address),
     .select_i(jump),
     .data_o(pc_in)
+    );
+
+Branch_MUX Question_Mark(
+    .branchType_i(),
+    .zero_i(aluZero),
+    .alu_sign_i(aluResult[31]),
+    .branch_result_o(branch_MUX_result)
     );
 
 //calculating part
