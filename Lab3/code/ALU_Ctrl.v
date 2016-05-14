@@ -31,10 +31,10 @@ module ALU_Ctrl(
 	parameter ALUOP_R 		= 2;
 	parameter ALUOP_ADDI 	= 3;
 	parameter ALUOP_SLTIU 	= 4;
-	parameter ALUOP_BEQ 	= 5;
-	parameter ALUOP_LUI 	= 6;
 	parameter ALUOP_ORI 	= 7;
-	parameter ALUOP_BNE 	= 1;
+
+	parameter ALUOP_BRANCH 	= 1;
+	parameter ALUOP_LI 		= 6;
 
 	//Parameter of ALU Control
 	parameter CTRL_ADD 		= 4'b0010;
@@ -43,10 +43,10 @@ module ALU_Ctrl(
 	parameter CTRL_OR  		= 4'b0001;
 	parameter CTRL_SLT 		= 4'b0111;
 	parameter CTRL_SHR		= 4'b1000;
-	parameter CTRL_LUI		= 4'b1001;
-	parameter CTRL_BNE		= 4'b1010;
 	parameter CTRL_IDLE		= 4'b1111;
+	
 	parameter CTRL_MUL		= 4'b0100;
+	parameter CTRL_LI		= 4'b1001;
 
 	//Select exact operation
 	always@(*)begin
@@ -73,18 +73,16 @@ module ALU_Ctrl(
 					default:ALUCtrl_o = CTRL_IDLE;
 				endcase
 			end
-			//addi rt,rs,se100
-			ALUOP_ADDI:ALUCtrl_o = CTRL_ADD;
-			//sltiu rt,rs,ze10
-			ALUOP_SLTIU:ALUCtrl_o = CTRL_SLT;
-			//beq rs,rt,se25
-			ALUOP_BEQ:ALUCtrl_o = CTRL_SUB;
-			//lui rt,10
-			ALUOP_LUI:ALUCtrl_o = CTRL_LUI;
-			//ori rt,rs,ze100
-			ALUOP_ORI:ALUCtrl_o = CTRL_OR;
-			//bne rs,rt,se30
-			ALUOP_BNE:ALUCtrl_o = CTRL_BNE;
+			//addi rt, rs, se100
+			ALUOP_ADDI: ALUCtrl_o = CTRL_ADD;
+			//sltiu rt, rs, ze10
+			ALUOP_SLTIU: ALUCtrl_o = CTRL_SLT;
+			//ori rt, rs, ze100
+			ALUOP_ORI: ALUCtrl_o = CTRL_OR;
+			//bne rs, rt, se30
+			ALUOP_BRANCH: ALUCtrl_o = CTRL_SUB;
+			//li rt, 10
+			ALUOP_LI: ALUCtrl_o = CTRL_LI;
 		endcase
 	end
 
