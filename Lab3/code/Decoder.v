@@ -3,11 +3,11 @@
 //--------------------------------------------------------------------------------
 //Version:     1
 //--------------------------------------------------------------------------------
-//Writer:      
+//Writer:
 //----------------------------------------------
-//Date:        
+//Date:
 //----------------------------------------------
-//Description: 
+//Description:
 //--------------------------------------------------------------------------------
 
 module Decoder(
@@ -36,7 +36,7 @@ module Decoder(
 	output reg		   Jump_o;
 	output reg		   MemRead_o;
 	output reg		   MemWrite_o;
-	output reg		   MemtoReg_o;
+	output reg [2-1:0] MemtoReg_o;
 
 	//Parameter of Instruction
 	parameter INSTR_R 		= 0;
@@ -45,7 +45,7 @@ module Decoder(
 	parameter INSTR_BEQ		= 4;
 	parameter INSTR_ORI		= 13;
 	parameter INSTR_BNE		= 5;
-	
+
 	parameter INSTR_LOAD	= 35;
 	parameter INSTR_STORE	= 43;
 	parameter INSTR_JUMP	= 2;
@@ -66,7 +66,7 @@ module Decoder(
 	parameter BRH_ZERO1			= 0;
 	parameter BRH_ZERO0			= 1;
 	parameter BRH_RESULT1_ZERO1	= 2;
-	parameter BRH_RESULT1		= 3;	
+	parameter BRH_RESULT1		= 3;
 
 	//Main function
 	always@(*)begin
@@ -210,10 +210,3 @@ module Decoder(
 	end
 
 endmodule
-
-
-
-
-
-                    
-                    

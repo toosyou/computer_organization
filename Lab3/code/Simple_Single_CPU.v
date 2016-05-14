@@ -27,8 +27,8 @@ wire [ 4:0] writeReg;
 //decoder
 wire        regDst;
 wire        branch;
-wire        memToReg;
-wire [ 2:0] branchType;
+wire [ 1:0] memToReg;
+wire [ 1:0] branchType;
 wire        jump;
 wire        memRead;
 wire        memWrite;
@@ -113,7 +113,7 @@ MUX_2to1 #(.size(32)) Mux_PC_Source_Jump(
     );
 
 Branch_MUX Question_Mark(
-    .branchType_i(),
+    .branchType_i(branchType),
     .zero_i(aluZero),
     .alu_sign_i(aluResult[31]),
     .branch_result_o(branch_MUX_result)
@@ -151,7 +151,12 @@ Decoder Decoder(
     .ALU_op_o(aluOp),
     .ALUSrc_o(aluSrc),
     .RegDst_o(regDst),
-    .Branch_o(branch)
+    .Branch_o(branch),
+    .BranchType_o(branchType),
+    .Jump_o(jump),
+    .MemRead_o(memRead),
+    .MemWrite_o(memWrite),
+    .MemtoReg_o(memToReg)
     );
 
 ALU_Ctrl AC(
@@ -161,7 +166,7 @@ ALU_Ctrl AC(
     .shamt_ctrl_o(shamtCtrl)
     );
 
-Data_Memory DM(
+Data_Memory Data_Memory(
     .clk_i(clk_i),
     .addr_i(aluResult),
     .data_i(RTdata),
@@ -171,6 +176,7 @@ Data_Memory DM(
     );
 
 MUX_3to1 #(.size(32)) Mux_Write_Data(
+    .data0_i({31'd0,aluResult[31]}),
     .data1_i(readDataDM),
     .data2_i(seConstant),
     .select_i(memToReg),
