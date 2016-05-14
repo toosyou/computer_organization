@@ -17,6 +17,7 @@ module Decoder(
 	ALUSrc_o,
 	RegDst_o,
 	Branch_o,
+	BranchType_o,
 	Jump_o,
 	MemRead_o,
 	MemWrite_o,
@@ -31,7 +32,7 @@ module Decoder(
 	output         ALUSrc_o;
 	output         RegDst_o;
 	output         Branch_o;
-	output		   BranchType_o;
+	output [2-1:0] BranchType_o;
 	output		   Jump_o;
 	output		   MemRead_o;
 	output		   MemWrite_o;
@@ -43,27 +44,35 @@ module Decoder(
 	reg            RegWrite_o;
 	reg            RegDst_o;
 	reg            Branch_o;
+	reg    [2-1:0] BranchType_o;
+	reg		   	   Jump_o;
+	reg		   	   MemRead_o;
+	reg		   	   MemWrite_o;
+	reg 		   MemtoReg_o;
 
 	//Parameter of Instruction
 	parameter INSTR_R 		= 0;
 	parameter INSTR_ADDI 	= 8;
 	parameter INSTR_SLTIU	= 9;
 	parameter INSTR_BEQ		= 4;
-	parameter INSTR_LUI 	= 15;
 	parameter INSTR_ORI		= 13;
 	parameter INSTR_BNE		= 5;
+	
 	parameter INSTR_LOAD	= 35;
 	parameter INSTR_STORE	= 43;
 	parameter INSTR_JUMP	= 2;
+	parameter INSTR_JAL		= 3;
+	parameter INSTR_BLE		= 6;
+	parameter INSTR_BLTZ	= 1;
+	parameter INSTR_LI 		= 15;
 
 	//Parameter of ALU Operation
 	parameter ALUOP_R 		= 2;
 	parameter ALUOP_ADDI 	= 3;
 	parameter ALUOP_SLTIU 	= 4;
-	parameter ALUOP_BEQ 	= 5;
-	parameter ALUOP_LUI 	= 6;
 	parameter ALUOP_ORI 	= 7;
-	parameter ALUOP_BNE 	= 1;
+	parameter ALUOP_BRANCH 	= 1;
+	parameter ALUOP_LI 		= 6;
 
 	//Main function
 	always@(*)begin
@@ -72,7 +81,6 @@ module Decoder(
 				Jump_o			<= 0;
 				ALUSrc_o		<= 0;
 				Branch_o		<= 0;
-				//BranchType_o	<= 1; //don't care
 				ALU_op_o		<= ALUOP_R;
 				MemWrite_o		<= 0;
 				MemRead_o		<= 0;
@@ -84,7 +92,6 @@ module Decoder(
 				Jump_o			<= 0;
 				ALUSrc_o		<= 1;
 				Branch_o		<= 0;
-				//BranchType_o	<= 1; //don't care
 				ALU_op_o		<= ALUOP_ADDI;
 				MemWrite_o		<= 0;
 				MemRead_o		<= 0;
@@ -96,7 +103,6 @@ module Decoder(
 				Jump_o			<= 0;
 				//ALUSrc_o		<= 1; //don't care (zero extended)
 				Branch_o		<= 0;
-				//BranchType_o	<= 1; //don't care
 				ALU_op_o		<= ALUOP_SLTIU;
 				MemWrite_o		<= 0;
 				MemRead_o		<= 0;
@@ -107,32 +113,17 @@ module Decoder(
 			INSTR_BEQ: begin
 				Jump_o			<= 0;
 				ALUSrc_o		<= 0;
-				Branch_o		<= 1;
+				Branch_o		<= 2'b00;
 				BranchType_o	<= 1;
-				ALU_op_o		<= ALUOP_BEQ;
+				ALU_op_o		<= ALUOP_BRANCH;
 				MemWrite_o		<= 0;
 				MemRead_o		<= 0;
-				//MemtoReg_o	<= 0; //don't care
 				RegWrite_o		<= 0;
-				//RegDst_o		<= 0; // don't care
-			end
-			INSTR_LUI: begin
-				Jump_o			<= 0;
-				ALUSrc_o		<= 1;
-				Branch_o		<= 0;
-				//BranchType_o	<= 1; //don't care
-				ALU_op_o		<= ALUOP_LUI;
-				MemWrite_o		<= 0;
-				MemRead_o		<= 0;
-				MemtoReg_o		<= 0;
-				RegWrite_o		<= 1;
-				RegDst_o		<= 0;
 			end
 			INSTR_ORI: begin
 				Jump_o			<= 0;
 				//ALUSrc_o		<= 1; // don't care (zero extended)
 				Branch_o		<= 0;
-				//BranchType_o	<= 1; //don't care
 				ALU_op_o		<= ALUOP_ORI;
 				MemWrite_o		<= 0;
 				MemRead_o		<= 0;
@@ -143,20 +134,17 @@ module Decoder(
 			INSTR_BNE: begin
 				Jump_o			<= 0;
 				ALUSrc_o		<= 0;
-				Branch_o		<= 1;
+				Branch_o		<= 2'b01;
 				BranchType_o	<= 0;
-				ALU_op_o		<= ALUOP_BNE;
+				ALU_op_o		<= ALUOP_BRANCH;
 				MemWrite_o		<= 0;
 				MemRead_o		<= 0;
-				//MemtoReg_o	<= 0; //don't care
 				RegWrite_o		<= 0;
-				//RegDst_o		<= 0; // don't care
 			end
 			INSTR_LOAD: begin
 				Jump_o			<= 0;
 				ALUSrc_o		<= 1;
 				Branch_o		<= 0;
-				//BranchType_o	<= 1; //don't care
 				ALU_op_o		<= ALUOP_ADDI;
 				MemWrite_o		<= 0;
 				MemRead_o		<= 1;
@@ -168,25 +156,47 @@ module Decoder(
 				Jump_o			<= 0;
 				ALUSrc_o		<= 1;
 				Branch_o		<= 0;
-				//BranchType_o	<= 1; //don't care
 				ALU_op_o		<= ALUOP_ADDI;
 				MemWrite_o		<= 1;
 				MemRead_o		<= 0;
-				//MemtoReg_o	<= 1; //don't care
 				RegWrite_o		<= 0;
-				//RegDst_o		<= 0; //don't care
 			end
 			INSTR_JUMP: begin
 				Jump_o			<= 1;
-				//ALUSrc_o		<= 1; //don't care
-				//Branch_o		<= 0; //don't care
-				//BranchType_o	<= 1; //don't care
-				//ALU_op_o		<= ALUOP_ADDI; //don't care
 				MemWrite_o		<= 0;
 				MemRead_o		<= 0;
-				//MemtoReg_o	<= 1; //don't care
 				RegWrite_o		<= 0;
-				//RegDst_o		<= 0; //don't care
+			end
+			INSTR_BLE: begin
+				Jump_o			<= 0;
+				ALUSrc_o		<= 0;
+				Branch_o		<= 1;
+				BranchType_o	<= 2'b10;
+				ALU_op_o		<= ALUOP_BRANCH;
+				MemWrite_o		<= 0;
+				MemRead_o		<= 0;
+				RegWrite_o		<= 0;
+			end
+			INSTR_BLTZ: begin
+				Jump_o			<= 0;
+				ALUSrc_o		<= 0;
+				Branch_o		<= 1;
+				BranchType_o	<= 2'b11;
+				ALU_op_o		<= ALUOP_BRANCH;
+				MemWrite_o		<= 0;
+				MemRead_o		<= 0;
+				RegWrite_o		<= 0;
+			end
+			INSTR_LI: begin
+				Jump_o			<= 0;
+				ALUSrc_o		<= 1;
+				Branch_o		<= 0;
+				ALU_op_o		<= ALUOP_LI;
+				MemWrite_o		<= 0;
+				MemRead_o		<= 0;
+				MemtoReg_o		<= 0;
+				RegWrite_o		<= 1;
+				RegDst_o		<= 0;
 			end
 			default: begin
 				RegWrite_o <= 0;
