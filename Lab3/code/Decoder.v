@@ -16,7 +16,11 @@ module Decoder(
 	ALU_op_o,
 	ALUSrc_o,
 	RegDst_o,
-	Branch_o
+	Branch_o,
+	Jump_o,
+	MemRead_o,
+	MemWrite_o,
+	MemtoReg_o
 	);
 
 	//I/O ports
@@ -27,6 +31,10 @@ module Decoder(
 	output         ALUSrc_o;
 	output         RegDst_o;
 	output         Branch_o;
+	output		   Jump_o;
+	output		   MemRead_o;
+	output		   MemWrite_o;
+	output		   MemtoReg_o;
 	 
 	//Internal Signals
 	reg    [3-1:0] ALU_op_o;
@@ -35,27 +43,20 @@ module Decoder(
 	reg            RegDst_o;
 	reg            Branch_o;
 
-	//Parameter
-	/*parameter INSTR_ADD 	= 0;
-	parameter INSTR_SUB		= 0;
-	parameter INSTR_AND		= 0;
-	parameter INSTR_OR		= 0;
-	parameter INSTR_SLT		= 0;*/
-
-	parameter INSTR_ZERO 	= 0;
+	//Parameter of Instruction
+	parameter INSTR_R 		= 0;
 	parameter INSTR_ADDI 	= 8;
 	parameter INSTR_SLTIU	= 9;
 	parameter INSTR_BEQ		= 4;
-	//adv
 	parameter INSTR_LUI 	= 15;
 	parameter INSTR_ORI		= 13;
 	parameter INSTR_BNE		= 5;
 
+	//Parameter of ALU control
 	parameter ALUOP_R 		= 2;
 	parameter ALUOP_ADDI 	= 3;
 	parameter ALUOP_SLTIU 	= 4;
 	parameter ALUOP_BEQ 	= 5;
-	//adv
 	parameter ALUOP_LUI 	= 6;
 	parameter ALUOP_ORI 	= 7;
 	parameter ALUOP_BNE 	= 1;
@@ -63,57 +64,85 @@ module Decoder(
 	//Main function
 	always@(*)begin
 		case( instr_op_i )
-			INSTR_ZERO:begin // r-type instr: add, sub, and, or, slt
-				RegDst_o		= 1;
-				ALUSrc_o		= 0;
-				RegWrite_o		= 1;
-				Branch_o		= 0;
-				ALU_op_o		= ALUOP_R;
+			INSTR_R: begin // r-type instr: add, sub, and, or, slt
+				Jump_o			<= 0;
+				RegDst_o		<= 1;
+				ALUSrc_o		<= 0;
+				Branch_o		<= 0;
+				ALU_op_o		<= ALUOP_R;
+				MemWrite_o		<= 0;
+				MemRead_o		<= 0;
+				MemtoReg_o		<= 0;
+				RegWrite_o		<= 1;
 			end
-			INSTR_ADDI:begin
-				RegDst_o		= 0;
-				ALUSrc_o		= 1;
-				RegWrite_o		= 1;
-				Branch_o		= 0;
-				ALU_op_o		= ALUOP_ADDI;
+			INSTR_ADDI: begin
+				Jump_o			<= 0;
+				RegDst_o		<= 0;
+				ALUSrc_o		<= 1;
+				Branch_o		<= 0;
+				ALU_op_o		<= ALUOP_ADDI;
+				MemWrite_o		<= 0;
+				MemRead_o		<= 0;
+				MemtoReg_o		<= 0;
+				RegWrite_o		<= 1;
 			end
-			INSTR_SLTIU:begin
-				RegDst_o		= 0;
-				ALUSrc_o		= 1;
-				RegWrite_o		= 1;
-				Branch_o		= 0;
-				ALU_op_o		= ALUOP_SLTIU;
+			INSTR_SLTIU: begin
+				Jump_o			<= 0;
+				RegDst_o		<= 0;
+				//ALUSrc_o		<= 1; //don't care (zero extended)
+				Branch_o		<= 0;
+				ALU_op_o		<= ALUOP_SLTIU;
+				MemWrite_o		<= 0;
+				MemRead_o		<= 0;
+				MemtoReg_o		<= 0;
+				RegWrite_o		<= 1;
 			end
-			INSTR_BEQ:begin
-				RegDst_o		= 0; // don't care
-				ALUSrc_o		= 0;
-				RegWrite_o		= 0;
-				Branch_o		= 1;
-				ALU_op_o		= ALUOP_BEQ;
+			INSTR_BEQ: begin
+				Jump_o			<= 0;
+				//RegDst_o		<= 0; // don't care
+				ALUSrc_o		<= 0;
+				Branch_o		<= 1;
+				ALU_op_o		<= ALUOP_BEQ;
+				MemWrite_o		<= 0;
+				MemRead_o		<= 0;
+				//MemtoReg_o	<= 0; //don't care
+				RegWrite_o		<= 0;
 			end
-			INSTR_LUI:begin
-				RegDst_o		= 0;
-				ALUSrc_o		= 1; // don't care
-				RegWrite_o		= 1;
-				Branch_o		= 0;
-				ALU_op_o		= ALUOP_LUI;
+			INSTR_LUI: begin
+				Jump_o			<= 0;
+				RegDst_o		<= 0;
+				ALUSrc_o		<= 1;
+				Branch_o		<= 0;
+				ALU_op_o		<= ALUOP_LUI;
+				MemWrite_o		<= 0;
+				MemRead_o		<= 0;
+				MemtoReg_o		<= 0;
+				RegWrite_o		<= 1;
 			end
-			INSTR_ORI:begin
-				RegDst_o		= 0;
-				ALUSrc_o		= 1; // don't care
-				RegWrite_o		= 1;
-				Branch_o		= 0;
-				ALU_op_o		= ALUOP_ORI;
+			INSTR_ORI: begin
+				Jump_o			<= 0;
+				RegDst_o		<= 0;
+				//ALUSrc_o		<= 1; // don't care (zero extended)
+				Branch_o		<= 0;
+				ALU_op_o		<= ALUOP_ORI;
+				MemWrite_o		<= 0;
+				MemRead_o		<= 0;
+				MemtoReg_o		<= 0;
+				RegWrite_o		<= 1;
 			end
-			INSTR_BNE:begin
-				RegDst_o		= 0; // don't care
-				ALUSrc_o		= 0;
-				RegWrite_o		= 0;
-				Branch_o		= 1;
-				ALU_op_o		= ALUOP_BNE;
+			INSTR_BNE: begin
+				Jump_o			<= 0;
+				//RegDst_o		<= 0; // don't care
+				ALUSrc_o		<= 0;
+				Branch_o		<= 1;
+				ALU_op_o		<= ALUOP_BNE;
+				MemWrite_o		<= 0;
+				MemRead_o		<= 0;
+				//MemtoReg_o	<= 0; //don't care
+				RegWrite_o		<= 0;
 			end
-			default:begin
-				RegWrite_o = 0;
+			default: begin
+				RegWrite_o <= 0;
 			end
 
 		endcase
