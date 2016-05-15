@@ -25,7 +25,7 @@ wire [31:0] instr;
 wire [ 4:0] writeReg;
 
 //decoder
-wire        regDst;
+wire [ 1:0] regDst;
 wire        branch;
 wire [ 1:0] memToReg;
 wire [ 1:0] branchType;
@@ -38,12 +38,15 @@ wire        regWrite;
 
 wire [ 3:0] aluCtrl;
 wire [ 1:0] shamtCtrl;
+wire        jr_ctrl;
 
 wire [31:0] RSdata;
 wire [31:0] RTdata;
 wire [31:0] seConstant;
 wire [31:0] zeConstant;
 wire [31:0] shamt;
+
+//alu
 wire [31:0] aluSrc1;
 wire [31:0] aluSrc2;
 wire [31:0] aluSrc2_shift;
@@ -54,6 +57,7 @@ wire [31:0] pc_next;
 wire [31:0] pc_shift;
 wire [31:0] pc_branch;
 wire [31:0] pc_mux1;
+wire [31:0] pc_mux2;
 wire [27:0] jump_address_tmp;
 wire [31:0] jump_address;
 wire        branch_MUX_result;
@@ -109,6 +113,13 @@ MUX_2to1 #(.size(32)) Mux_PC_Source_Jump(
     .data0_i(pc_mux1),
     .data1_i(jump_address),
     .select_i(jump),
+    .data_o(pc_mux2)
+    );
+
+MUX_2to1 #(.size(32)) Mux_PC_Source_Rs(
+    .data0_i(pc_mux2),
+    .data1_i(RSdata),
+    .select_i(jr_ctrl),
     .data_o(pc_in)
     );
 
@@ -126,9 +137,10 @@ Instr_Memory IM(
     .instr_o(instr)
     );
 
-MUX_2to1 #(.size(5)) Mux_Write_Reg(
+MUX_3to1 #(.size(5)) Mux_Write_Reg(
     .data0_i(instr[20:16]),
     .data1_i(instr[15:11]),
+    .data2_i(5'd31),
     .select_i(regDst),
     .data_o(writeReg)
     );
@@ -163,7 +175,8 @@ ALU_Ctrl AC(
     .funct_i(instr[5:0]),
     .ALUOp_i(aluOp),
     .ALUCtrl_o(aluCtrl),
-    .shamt_ctrl_o(shamtCtrl)
+    .shamt_ctrl_o(shamtCtrl),
+    .jr_ctrl_o(jr_ctrl)
     );
 
 Data_Memory Data_Memory(
@@ -175,10 +188,11 @@ Data_Memory Data_Memory(
     .data_o(readDataDM)
     );
 
-MUX_3to1 #(.size(32)) Mux_Write_Data(
-    .data0_i({31'd0,aluResult[31]}),
+MUX_4to1 #(.size(32)) Mux_Write_Data(
+    .data0_i(aluResult),
     .data1_i(readDataDM),
     .data2_i(seConstant),
+    .data3_i(pc_next),
     .select_i(memToReg),
     .data_o(writeData)
     );

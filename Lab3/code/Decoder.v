@@ -106,8 +106,8 @@ module Decoder(
 			INSTR_BEQ: begin
 				Jump_o			<= 0;
 				ALUSrc_o		<= 0;
-				Branch_o		<= BRH_ZERO1;
-				BranchType_o	<= 1;
+				Branch_o		<= 1;
+				BranchType_o	<= BRH_ZERO1;
 				ALU_op_o		<= ALUOP_BRANCH;
 				MemWrite_o		<= 0;
 				MemRead_o		<= 0;
@@ -127,8 +127,8 @@ module Decoder(
 			INSTR_BNE: begin
 				Jump_o			<= 0;
 				ALUSrc_o		<= 0;
-				Branch_o		<= BRH_ZERO0;
-				BranchType_o	<= 0;
+				Branch_o		<= 1;
+				BranchType_o	<= BRH_ZERO0;
 				ALU_op_o		<= ALUOP_BRANCH;
 				MemWrite_o		<= 0;
 				MemRead_o		<= 0;
