@@ -30,7 +30,7 @@ module Decoder(
 	output reg         RegWrite_o;
 	output reg [3-1:0] ALU_op_o;
 	output reg 		   ALUSrc_o;
-	output reg         RegDst_o;
+	output reg [2-1:0] RegDst_o;
 	output reg         Branch_o;
 	output reg [2-1:0] BranchType_o;
 	output reg		   Jump_o;
@@ -159,18 +159,15 @@ module Decoder(
 				MemWrite_o		<= 0;
 				MemRead_o		<= 0;
 				RegWrite_o		<= 0;
-			end/*
+			end
 			INSTR_JAL: begin
-				Jump_o			<= 0;
-				ALUSrc_o		<= 1;
-				Branch_o		<= 0;
-				ALU_op_o		<= ALUOP_ADDI;
+				Jump_o			<= 1;
 				MemWrite_o		<= 0;
 				MemRead_o		<= 0;
-				MemtoReg_o		<= 0;
+				MemtoReg_o		<= 3;
 				RegWrite_o		<= 1;
-				RegDst_o		<= 0;
-			end*/
+				RegDst_o		<= 2;
+			end
 			INSTR_BLE: begin
 				Jump_o			<= 0;
 				ALUSrc_o		<= 0;
