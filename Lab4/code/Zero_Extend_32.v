@@ -15,7 +15,7 @@ module Zero_Extend_32(
     data_o
     );
 
-parameter size = 0;
+parameter size = 32;
 			
 //I/O ports
 input   [size-1:0] data_i;

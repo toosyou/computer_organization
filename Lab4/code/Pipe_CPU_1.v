@@ -118,28 +118,28 @@ Reg_File RF(
 	);
 
 Decoder Control(
-	instr_op_i(ID_instruction[31:26]),
-	RegDst_o(ID_ctrl_EX[4]),
-	ALU_op_o(ID_ctrl_EX[3:1]),
-	ALUSrc_o(ID_ctrl_EX[0]),
-	Branch_o(ID_ctrl_MEM[2]),
-	MemRead_o(ID_ctrl_MEM[1]),
-	MemWrite_o(ID_ctrl_MEM[0]),
-	RegWrite_o(ID_ctrl_WB[1]),
-	MemtoReg_o(ID_ctrl_WB[0])
+	.instr_op_i(ID_instruction[31:26]),
+	.RegDst_o(ID_ctrl_EX[4]),
+	.ALU_op_o(ID_ctrl_EX[3:1]),
+	.ALUSrc_o(ID_ctrl_EX[0]),
+	.Branch_o(ID_ctrl_MEM[2]),
+	.MemRead_o(ID_ctrl_MEM[1]),
+	.MemWrite_o(ID_ctrl_MEM[0]),
+	.RegWrite_o(ID_ctrl_WB[1]),
+	.MemtoReg_o(ID_ctrl_WB[0])
 	);
 
 Sign_Extend Sign_Extend(
-	data_i(ID_instruction[15:0]),
-    data_o(ID_immediate)
+	.data_i(ID_instruction[15:0]),
+    .data_o(ID_immediate)
 	);	
 
-Pipe_Reg #(.size(N)) ID_EX(
-	clk_i(clk_i),
-	rst_i(rst_i),
-	data_i({ID_ctrl_WB, ID_ctrl_MEM, ID_ctrl_EX, 
+Pipe_Reg #(.size(148)) ID_EX(
+	.clk_i(clk_i),
+	.rst_i(rst_i),
+	.data_i({ID_ctrl_WB, ID_ctrl_MEM, ID_ctrl_EX, 
 		ID_pc, ID_RS_data, ID_RT_data, ID_immediate, ID_instruction[20:16], ID_instruction[15:11]}),
-	data_o({EX_ctrl_WB, EX_ctrl_MEM, EX_ctrl_EX,
+	.data_o({EX_ctrl_WB, EX_ctrl_MEM, EX_ctrl_EX,
 		EX_pc, EX_RS_data, EX_RT_data, EX_immediate, EX_RT_reg, EX_RD_reg})
 	);
 		
@@ -148,7 +148,7 @@ ALU ALU(
 
 		);
 		
-ALU_Control ALU_Control(
+ALU_Ctrl ALU_Control(
 
 		);
 
@@ -160,7 +160,7 @@ MUX_2to1 #(.size(5)) Mux2(
 
         );
 
-Pipe_Reg #(.size(N)) EX_MEM(
+Pipe_Reg #(.size(100)) EX_MEM(
 
 		);
 			   
@@ -169,7 +169,7 @@ Data_Memory DM(
 
 	    );
 
-Pipe_Reg #(.size(N)) MEM_WB(
+Pipe_Reg #(.size(100)) MEM_WB(
         
 		);
 

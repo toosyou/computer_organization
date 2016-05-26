@@ -28,11 +28,11 @@ module Decoder(
 	output reg         RegWrite_o;
 	output reg [3-1:0] ALU_op_o;
 	output reg 		   ALUSrc_o;
-	output reg [2-1:0] RegDst_o;
+	output reg 		   RegDst_o; //originally formed by 2 bits
 	output reg         Branch_o;
 	output reg		   MemRead_o;
 	output reg		   MemWrite_o;
-	output reg [2-1:0] MemtoReg_o;
+	output reg 		   MemtoReg_o; // originally formed by 2 bits
 
 	//Parameter of Instruction
 	parameter INSTR_R 		= 0;
