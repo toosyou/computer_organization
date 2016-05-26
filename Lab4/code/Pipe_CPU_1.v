@@ -54,15 +54,30 @@ wire [ 2:0] EX_ctrl_MEM;
 wire [ 1:0] EX_ctrl_WB;
 
 /**** MEM stage ****/
+wire 		MEM_RegWrite;
+wire 		MEM_branch;
+wire [31:0] MEM_PC_branch;
+wire 		MEM_ALU_zero;
 wire 		MEM_PCSrc;
 wire [31:0] MEM_ALU_result;
+wire [31:0] MEM_RT_data;
+wire 		MEM_MemWrite;
+wire 		MEM_MemRead;
+wire [31:0] MEM_read_data;
+wire [ 4:0] MEM_write_reg;
+
 
 //control signal
+wire [ 1:0] MEM_ctrl_WB;
 
 
 /**** WB stage ****/
 wire [ 4:0] WB_write_reg;
 wire [31:0] WB_write_data;
+wire 		WB_RegWrite;
+wire 		WB_MemtoReg;
+wire [31:0] WB_mem_read_data;
+wire [31:0] WB_ALU_result;
 
 //control signal
 wire [ 1:0] WB_ctrl_WB;
@@ -73,7 +88,7 @@ Instnatiate modules
 //Instantiate the components in IF stage
 MUX_2to1 #(.size(32)) PC_MUX(
 	.data0_i(IF_pc_add4),
-	.data1_i(MEM_ALU_result),
+	.data1_i(MEM_PC_branch),
 	.select_i(MEM_PCSrc),
 	.data_o(IF_pc_mux_out)
 	);
@@ -112,7 +127,7 @@ Reg_File RF(
     .RTaddr_i(ID_instruction[20:16]),
     .RDaddr_i(WB_write_reg),
     .RDdata_i(WB_write_data),
-    .RegWrite_i(WB_ctrl_WB[1]),
+    .RegWrite_i(WB_RegWrite),
     .RSdata_o(ID_RS_data),
     .RTdata_o(ID_RT_data)
 	);
@@ -160,22 +175,40 @@ MUX_2to1 #(.size(5)) Mux2(
 
         );
 
-Pipe_Reg #(.size(100)) EX_MEM(
-
+Pipe_Reg #(.size(107)) EX_MEM(
+		.clk_i(clk_i),
+		.rst_i(rst_i),
+		.data_i(),
+		.data_o({MEM_ctrl_WB, MEM_branch, MEM_MemRead, 
+			MEM_MemWrite, MEM_PC_branch, MEM_ALU_zero, 
+			MEM_ALU_result, MEM_RT_data, MEM_write_reg})
 		);
 			   
 //Instantiate the components in MEM stage
-Data_Memory DM(
+assign MEM_PCSrc = MEM_branch & MEM_ALU_zero;
 
+Data_Memory DM(
+		.clk_i(clk_i),
+		.addr_i(MEM_ALU_result),
+		.data_i(MEM_RT_data),
+		.MemRead_i(MEM_MemRead),
+		.MemWrite_i(MEM_MemWrite),
+		.data_o(MEM_read_data)
 	    );
 
-Pipe_Reg #(.size(100)) MEM_WB(
-        
+Pipe_Reg #(.size(71)) MEM_WB(
+        .clk_i(clk_i),
+        .rst_i(rst_i),
+        .data_i({MEM_ctrl_WB, MEM_read_data, MEM_ALU_result, MEM_write_reg}),
+        .data_o({WB_RegWrite, WB_MemtoReg, WB_mem_read_data, WB_ALU_result, WB_write_reg})
 		);
 
 //Instantiate the components in WB stage
-MUX_3to1 #(.size(32)) Mux3(
-
+MUX_2to1 #(.size(32)) Mux3(
+		.data0_i(WB_mem_read_data),
+		.data1_i(WB_ALU_result),
+		.select_i(WB_MemtoReg),
+		.data_o(WB_write_data)
         );
 
 /****************************************
