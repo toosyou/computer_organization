@@ -31,7 +31,6 @@ module ALU_Ctrl(
 	parameter ALUOP_ADDI 	= 3;
 	parameter ALUOP_SLTIU 	= 4;
 	parameter ALUOP_ORI 	= 7;
-
 	parameter ALUOP_BRANCH 	= 1;
 
 	//Parameter of ALU Control
@@ -41,8 +40,7 @@ module ALU_Ctrl(
 	parameter CTRL_AND 		= 4'b0000;
 	parameter CTRL_OR  		= 4'b0001;
 	parameter CTRL_SLT 		= 4'b0111;
-	parameter CTRL_SHR		= 4'b1000;
-	
+	parameter CTRL_SHR		= 4'b1000;	
 	parameter CTRL_MUL		= 4'b0100;
 
 	//Select exact operation
