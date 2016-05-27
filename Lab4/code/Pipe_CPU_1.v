@@ -271,8 +271,8 @@ Pipe_Reg #(.size(71)) MEM_WB(
 
 //Instantiate the components in WB stage
 MUX_2to1 #(.size(32)) Write_data_Mux(
-	.data0_i(WB_mem_read_data),
-	.data1_i(WB_ALU_result),
+	.data0_i(WB_ALU_result),
+	.data1_i(WB_mem_read_data),
 	.select_i(WB_MemtoReg),
 	.data_o(WB_write_data)
     );
