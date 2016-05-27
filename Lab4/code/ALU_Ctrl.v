@@ -15,7 +15,6 @@ module ALU_Ctrl(
     ALUOp_i,
 	ALUCtrl_o,
 	shamt_ctrl_o,
-	jr_ctrl_o
     );
           
 	//I/O ports 
@@ -24,7 +23,6 @@ module ALU_Ctrl(
 
 	output reg [4-1:0] ALUCtrl_o;
 	output reg [1:0]   shamt_ctrl_o;
-	output reg		   jr_ctrl_o;
 	     
 	//Parameter of ALU Operation
 	parameter ALUOP_R 		= 2;
@@ -87,14 +85,6 @@ module ALU_Ctrl(
 			shamt_ctrl_o <= 2'b10; // zero-extended immediate
 		else
 			shamt_ctrl_o <= 2'b00;
-	end
-
-	//jump to register
-	always@(*) begin
-		if ( ALUOp_i == ALUOP_R && funct_i == 8 )
-			jr_ctrl_o <= 1;
-		else
-			jr_ctrl_o <= 0;
 	end
 
 endmodule     
