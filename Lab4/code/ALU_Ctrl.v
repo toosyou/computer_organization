@@ -14,7 +14,7 @@ module ALU_Ctrl(
     funct_i,
     ALUOp_i,
 	ALUCtrl_o,
-	shamt_ctrl_o,
+	shamt_ctrl_o
     );
           
 	//I/O ports 
