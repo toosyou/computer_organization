@@ -37,11 +37,18 @@ wire [31:0] ID_RT_data;
 wire [31:0] ID_se_immediate;
 wire [31:0] ID_ze_immediate;
 wire [31:0] ID_shamt;
+wire 		PCWrite;
+wire 		IF_IDWrite;
+wire 		IF_flush;
+wire 		ID_flush;
+wire 		EX_flush;
+
 
 //control signal
 wire [ 4:0] ID_ctrl_EX;
 wire [ 2:0] ID_ctrl_MEM;
 wire [ 1:0] ID_ctrl_WB;
+wire [ 9:0] ID_ctrl_all;
 
 /**** EX stage ****/
 wire [31:0] EX_pc;
@@ -74,6 +81,7 @@ wire [ 4:0] EX_write_addr;
 wire [ 4:0] EX_ctrl_EX;
 wire [ 2:0] EX_ctrl_MEM;
 wire [ 1:0] EX_ctrl_WB;
+wire [ 4:0] EX_ctrl_all;
 
 /**** MEM stage ****/
 wire 		MEM_RegWrite;
@@ -119,6 +127,7 @@ ProgramCounter PC(
 	.clk_i(clk_i),
 	.rst_i(rst_i),
 	.pc_in_i(IF_pc_mux_out),
+	.PCWrite_i(PCWrite),
 	.pc_out_o(IF_pc_out)
 	);
 
@@ -138,10 +147,25 @@ Pipe_Reg #(.size(32*2)) IF_ID(//top to down
 	.clk_i(clk_i),
 	.rst_i(rst_i),
 	.data_i({IF_pc_add4, IF_instruction}),
+	.write_i(IF_IDWrite),
+	.flush_i(IF_flush),
 	.data_o({ID_pc, ID_instruction})
 	);
 		
 //Instantiate the components in ID stage
+Hazard_Detector HD(
+	.ID_EX_MemRead_i(EX_ctrl_MEM[1]),
+	.ID_EX_RTaddr_i(EX_RT_addr),
+	.IF_ID_RSaddr_i(ID_instruction[25:21]),
+	.IF_ID_RTaddr_i(ID_instruction[20:16]),
+	.PCScr_i(MEM_PCSrc),
+	.PCWrite_o(PCWrite),
+	.IF_IDWrite_o(IF_IDWrite),
+	.IF_flush_o(IF_flush),
+	.ID_flush_o(ID_flush),
+	.EX_flush_o(EX_flush)
+	);
+
 Reg_File RF(
 	.clk_i(clk_i),
 	.rst_i(rst_i),
@@ -166,6 +190,13 @@ Decoder Control(
 	.MemtoReg_o(ID_ctrl_WB[0])
 	);
 
+MUX_2to1 #(.size(10)) MUX_ID_flush(
+	.data0_i({ID_ctrl_WB, ID_ctrl_MEM, ID_ctrl_EX}),
+	.data1_i(10'd0),
+	.select_i(ID_flush),
+	.data_o(ID_ctrl_all)
+	);
+
 Zero_Extend_32 #(.size(5)) Shamt_Extend(
     .data_i(ID_instruction[10:6]),
     .data_o(ID_shamt)
@@ -184,7 +215,9 @@ Zero_Extend_32 #(.size(16)) Zero_Extend(
 Pipe_Reg #(.size(217)) ID_EX(
 	.clk_i(clk_i),
 	.rst_i(rst_i),
-	.data_i({ID_ctrl_WB, ID_ctrl_MEM, ID_ctrl_EX, 
+	.write_i(1'b1),
+	.flush_i(1'b0),
+	.data_i({ID_ctrl_all, 
 		ID_pc, ID_RS_data, ID_RT_data, ID_shamt, ID_se_immediate, ID_ze_immediate,
 		ID_instruction[25:21], ID_instruction[20:16], ID_instruction[15:11]}),
 	.data_o({EX_ctrl_WB, EX_ctrl_MEM, EX_ctrl_EX,
@@ -223,11 +256,11 @@ ALU_Ctrl ALU_Control(
 	);
 
 MUX_3to1 #(.size(32)) ALU_src1_forward_Mux(
-    data0_i(EX_RS_data),
-    data1_i(MEM_alu_result),
-    data2_i(WB_write_data),
-    select_i(EX_src1_select),
-    data_o(EX_src1_forward)
+    .data0_i(EX_RS_data),
+    .data1_i(MEM_alu_result),
+    .data2_i(WB_write_data),
+    .select_i(EX_src1_select),
+    .data_o(EX_src1_forward)
     );
 
 MUX_2to1 #(.size(32)) ALU_src1_Mux(
@@ -238,11 +271,11 @@ MUX_2to1 #(.size(32)) ALU_src1_Mux(
     );
 
 MUX_3to1 #(.size(32)) ALU_src2_forward_Mux(
-    data0_i(EX_RT_data),
-    data1_i(MEM_alu_result),
-    data2_i(WB_write_data),
-    select_i(EX_src2_select),
-    data_o(EX_src2_forward)
+    .data0_i(EX_RT_data),
+    .data1_i(MEM_alu_result),
+    .data2_i(WB_write_data),
+    .select_i(EX_src2_select),
+    .data_o(EX_src2_forward)
     );
 
 MUX_2to1 #(.size(32)) ALU_se_src2_Mux(
@@ -274,10 +307,19 @@ MUX_2to1 #(.size(5)) Write_reg_Mux(
     .data_o(EX_write_addr)
     );
 
+MUX_2to1 #(.size(5)) MUX_EX_flush(
+	.data0_i({EX_ctrl_WB, EX_ctrl_MEM}),
+	.data1_i(5'd0),
+	.select_i(EX_flush),
+	.data_o(EX_ctrl_all)
+	);
+
 Pipe_Reg #(.size(107)) EX_MEM(
 	.clk_i(clk_i),
 	.rst_i(rst_i),
-	.data_i({EX_ctrl_WB, EX_ctrl_MEM,
+	.write_i(1'b1),
+	.flush_i(1'b0),
+	.data_i({EX_ctrl_all,
 		EX_pc_branch, EX_alu_zero, EX_alu_result, EX_src2_forward, EX_write_addr}),
 	.data_o({MEM_ctrl_WB, MEM_branch, MEM_MemRead, MEM_MemWrite,
 		MEM_pc_branch, MEM_alu_zero, MEM_alu_result, MEM_RT_data, MEM_write_addr})
@@ -298,6 +340,8 @@ Data_Memory DM(
 Pipe_Reg #(.size(71)) MEM_WB(
     .clk_i(clk_i),
     .rst_i(rst_i),
+    .write_i(1'b1),
+	.flush_i(1'b0),
     .data_i({MEM_ctrl_WB, MEM_read_data, MEM_alu_result, MEM_write_addr}),
     .data_o({WB_RegWrite, WB_MemtoReg, WB_mem_read_data, WB_alu_result, WB_write_addr})
 	);

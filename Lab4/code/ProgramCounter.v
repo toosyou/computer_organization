@@ -14,6 +14,7 @@ module ProgramCounter(
     clk_i,
 	rst_i,
 	pc_in_i,
+	PCWrite_i,
 	pc_out_o
 	);
      
@@ -21,6 +22,7 @@ module ProgramCounter(
 input           clk_i;
 input	        rst_i;
 input  [32-1:0] pc_in_i;
+input 			PCWrite_i;
 output [32-1:0] pc_out_o;
  
 //Internal Signals
@@ -33,8 +35,10 @@ reg    [32-1:0] pc_out_o;
 always @(posedge clk_i) begin
     if(~rst_i)
 	    pc_out_o <= 0;
-	else
+	else if(PCWrite_i)
 	    pc_out_o <= pc_in_i;
+	else
+		pc_out_o <= pc_out_o;
 end
 
 endmodule

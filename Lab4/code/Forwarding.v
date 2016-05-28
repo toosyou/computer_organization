@@ -18,8 +18,8 @@ module Forwarding(
 	input [4:0] WB_write_addr_i;
 	input		WB_RegWrite_i;
 
-	output [1:0] RS_select_o;
-	output [1:0] RT_select_o;
+	output reg [1:0] RS_select_o;
+	output reg [1:0] RT_select_o;
 
 	//Internal signals
 	reg    [32-1:0] result_o;
