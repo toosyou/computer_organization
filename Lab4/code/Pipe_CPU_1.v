@@ -43,12 +43,12 @@ wire 		IF_flush;
 wire 		ID_flush;
 wire 		EX_flush;
 
-
 //control signal
 wire [ 4:0] ID_ctrl_EX;
 wire [ 2:0] ID_ctrl_MEM;
 wire [ 1:0] ID_ctrl_WB;
 wire [ 9:0] ID_ctrl_all;
+
 
 /**** EX stage ****/
 wire [31:0] EX_pc;
@@ -83,34 +83,33 @@ wire [ 2:0] EX_ctrl_MEM;
 wire [ 1:0] EX_ctrl_WB;
 wire [ 4:0] EX_ctrl_all;
 
+
 /**** MEM stage ****/
 wire 		MEM_RegWrite;
-wire 		MEM_branch;
 wire [31:0] MEM_pc_branch;
 wire 		MEM_alu_zero;
 wire 		MEM_PCSrc;
 wire [31:0] MEM_alu_result;
 wire [31:0] MEM_RT_data;
-wire 		MEM_MemWrite;
-wire 		MEM_MemRead;
 wire [31:0] MEM_read_data;
 wire [ 4:0] MEM_write_addr;
 
-
 //control signal
+wire 		MEM_branch;
+wire 		MEM_MemRead;
+wire 		MEM_MemWrite;
 wire [ 1:0] MEM_ctrl_WB;
 
 
 /**** WB stage ****/
 wire [ 4:0] WB_write_addr;
 wire [31:0] WB_write_data;
-wire 		WB_RegWrite;
-wire 		WB_MemtoReg;
 wire [31:0] WB_mem_read_data;
 wire [31:0] WB_alu_result;
 
 //control signal
-wire [ 1:0] WB_ctrl_WB;
+wire 		WB_RegWrite;
+wire 		WB_MemtoReg;
 
 /****************************************
 Instnatiate modules
@@ -243,7 +242,7 @@ Forwarding Forwarding_Unit(
 	.MEM_write_addr_i(MEM_write_addr),
 	.MEM_RegWrite_i(MEM_ctrl_WB[1]),
 	.WB_write_addr_i(WB_write_addr),
-	.WB_RegWrite_i(WB_ctrl_WB[1]),
+	.WB_RegWrite_i(WB_RegWrite),
 	.RS_select_o(EX_src1_select),
 	.RT_select_o(EX_src2_select)
 	);
@@ -342,8 +341,10 @@ Pipe_Reg #(.size(71)) MEM_WB(
     .rst_i(rst_i),
     .write_i(1'b1),
 	.flush_i(1'b0),
-    .data_i({MEM_ctrl_WB, MEM_read_data, MEM_alu_result, MEM_write_addr}),
-    .data_o({WB_RegWrite, WB_MemtoReg, WB_mem_read_data, WB_alu_result, WB_write_addr})
+    .data_i({MEM_ctrl_WB, 
+    	MEM_read_data, MEM_alu_result, MEM_write_addr}),
+    .data_o({WB_RegWrite, WB_MemtoReg, 
+    	WB_mem_read_data, WB_alu_result, WB_write_addr})
 	);
 
 //Instantiate the components in WB stage
