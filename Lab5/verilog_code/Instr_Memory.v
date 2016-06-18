@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
-module Instruction_Memory
+module Instr_Memory
 (
-	addr_i, 
+	addr_i,
 	instr_o
 );
 
@@ -17,10 +17,10 @@ initial begin
 
     for ( i=0; i<65; i=i+1 )
             instruction_file[i] = 32'b0;
-        
-    $readmemb("lab5_test_data.txt", instruction_file);  //Read instruction from "lab5_test_data.txt"   
+
+    $readmemb("lab5_test_data.txt", instruction_file);  //Read instruction from "lab5_test_data.txt"
 end
 
-assign	instr_o = instruction_file[addr_i/4];  
+assign	instr_o = instruction_file[addr_i/4];
 
 endmodule

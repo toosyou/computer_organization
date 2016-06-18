@@ -7,7 +7,7 @@ module TestBench;
 
 	CPU	cpu(
 				.clk_i(CLK),
-				.start_i(START)
+				.rst_i(START)
 				);
 
 initial	begin
