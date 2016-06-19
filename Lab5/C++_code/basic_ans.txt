@@ -1,0 +1,256 @@
+
+file_name:	DCACHE.txt
+cache_size:	64
+block_size:	4
+number_lookup:	126
+number_miss:	46
+miss rate:	0.365079
+
+
+file_name:	DCACHE.txt
+cache_size:	128
+block_size:	4
+number_lookup:	126
+number_miss:	27
+miss rate:	0.214286
+
+
+file_name:	DCACHE.txt
+cache_size:	256
+block_size:	4
+number_lookup:	126
+number_miss:	27
+miss rate:	0.214286
+
+
+file_name:	DCACHE.txt
+cache_size:	512
+block_size:	4
+number_lookup:	126
+number_miss:	27
+miss rate:	0.214286
+
+
+file_name:	DCACHE.txt
+cache_size:	64
+block_size:	8
+number_lookup:	126
+number_miss:	38
+miss rate:	0.301587
+
+
+file_name:	DCACHE.txt
+cache_size:	128
+block_size:	8
+number_lookup:	126
+number_miss:	14
+miss rate:	0.111111
+
+
+file_name:	DCACHE.txt
+cache_size:	256
+block_size:	8
+number_lookup:	126
+number_miss:	14
+miss rate:	0.111111
+
+
+file_name:	DCACHE.txt
+cache_size:	512
+block_size:	8
+number_lookup:	126
+number_miss:	14
+miss rate:	0.111111
+
+
+file_name:	DCACHE.txt
+cache_size:	64
+block_size:	16
+number_lookup:	126
+number_miss:	50
+miss rate:	0.396825
+
+
+file_name:	DCACHE.txt
+cache_size:	128
+block_size:	16
+number_lookup:	126
+number_miss:	7
+miss rate:	0.0555556
+
+
+file_name:	DCACHE.txt
+cache_size:	256
+block_size:	16
+number_lookup:	126
+number_miss:	7
+miss rate:	0.0555556
+
+
+file_name:	DCACHE.txt
+cache_size:	512
+block_size:	16
+number_lookup:	126
+number_miss:	7
+miss rate:	0.0555556
+
+
+file_name:	DCACHE.txt
+cache_size:	64
+block_size:	32
+number_lookup:	126
+number_miss:	62
+miss rate:	0.492063
+
+
+file_name:	DCACHE.txt
+cache_size:	128
+block_size:	32
+number_lookup:	126
+number_miss:	4
+miss rate:	0.031746
+
+
+file_name:	DCACHE.txt
+cache_size:	256
+block_size:	32
+number_lookup:	126
+number_miss:	4
+miss rate:	0.031746
+
+
+file_name:	DCACHE.txt
+cache_size:	512
+block_size:	32
+number_lookup:	126
+number_miss:	4
+miss rate:	0.031746
+
+
+file_name:	ICACHE.txt
+cache_size:	64
+block_size:	4
+number_lookup:	737
+number_miss:	531
+miss rate:	0.720488
+
+
+file_name:	ICACHE.txt
+cache_size:	128
+block_size:	4
+number_lookup:	737
+number_miss:	68
+miss rate:	0.0922659
+
+
+file_name:	ICACHE.txt
+cache_size:	256
+block_size:	4
+number_lookup:	737
+number_miss:	63
+miss rate:	0.0854817
+
+
+file_name:	ICACHE.txt
+cache_size:	512
+block_size:	4
+number_lookup:	737
+number_miss:	63
+miss rate:	0.0854817
+
+
+file_name:	ICACHE.txt
+cache_size:	64
+block_size:	8
+number_lookup:	737
+number_miss:	298
+miss rate:	0.404342
+
+
+file_name:	ICACHE.txt
+cache_size:	128
+block_size:	8
+number_lookup:	737
+number_miss:	37
+miss rate:	0.0502035
+
+
+file_name:	ICACHE.txt
+cache_size:	256
+block_size:	8
+number_lookup:	737
+number_miss:	32
+miss rate:	0.0434193
+
+
+file_name:	ICACHE.txt
+cache_size:	512
+block_size:	8
+number_lookup:	737
+number_miss:	32
+miss rate:	0.0434193
+
+
+file_name:	ICACHE.txt
+cache_size:	64
+block_size:	16
+number_lookup:	737
+number_miss:	157
+miss rate:	0.213026
+
+
+file_name:	ICACHE.txt
+cache_size:	128
+block_size:	16
+number_lookup:	737
+number_miss:	21
+miss rate:	0.0284939
+
+
+file_name:	ICACHE.txt
+cache_size:	256
+block_size:	16
+number_lookup:	737
+number_miss:	16
+miss rate:	0.0217096
+
+
+file_name:	ICACHE.txt
+cache_size:	512
+block_size:	16
+number_lookup:	737
+number_miss:	16
+miss rate:	0.0217096
+
+
+file_name:	ICACHE.txt
+cache_size:	64
+block_size:	32
+number_lookup:	737
+number_miss:	116
+miss rate:	0.157395
+
+
+file_name:	ICACHE.txt
+cache_size:	128
+block_size:	32
+number_lookup:	737
+number_miss:	13
+miss rate:	0.0176391
+
+
+file_name:	ICACHE.txt
+cache_size:	256
+block_size:	32
+number_lookup:	737
+number_miss:	8
+miss rate:	0.0108548
+
+
+file_name:	ICACHE.txt
+cache_size:	512
+block_size:	32
+number_lookup:	737
+number_miss:	8
+miss rate:	0.0108548
+

@@ -1,0 +1,432 @@
+
+file_name:	LU.txt
+associativity:	1
+cache_size:	1024
+block_size:	64
+number_lookup:	6451
+number_miss:	714
+miss rate:	0.110681
+
+
+file_name:	LU.txt
+associativity:	1
+cache_size:	2048
+block_size:	64
+number_lookup:	6451
+number_miss:	534
+miss rate:	0.0827779
+
+
+file_name:	LU.txt
+associativity:	1
+cache_size:	4096
+block_size:	64
+number_lookup:	6451
+number_miss:	353
+miss rate:	0.0547202
+
+
+file_name:	LU.txt
+associativity:	1
+cache_size:	8192
+block_size:	64
+number_lookup:	6451
+number_miss:	260
+miss rate:	0.0403038
+
+
+file_name:	LU.txt
+associativity:	1
+cache_size:	16384
+block_size:	64
+number_lookup:	6451
+number_miss:	204
+miss rate:	0.031623
+
+
+file_name:	LU.txt
+associativity:	1
+cache_size:	32768
+block_size:	64
+number_lookup:	6451
+number_miss:	164
+miss rate:	0.0254224
+
+
+file_name:	LU.txt
+associativity:	2
+cache_size:	1024
+block_size:	64
+number_lookup:	6451
+number_miss:	539
+miss rate:	0.0835529
+
+
+file_name:	LU.txt
+associativity:	2
+cache_size:	2048
+block_size:	64
+number_lookup:	6451
+number_miss:	334
+miss rate:	0.0517749
+
+
+file_name:	LU.txt
+associativity:	2
+cache_size:	4096
+block_size:	64
+number_lookup:	6451
+number_miss:	234
+miss rate:	0.0362734
+
+
+file_name:	LU.txt
+associativity:	2
+cache_size:	8192
+block_size:	64
+number_lookup:	6451
+number_miss:	192
+miss rate:	0.0297628
+
+
+file_name:	LU.txt
+associativity:	2
+cache_size:	16384
+block_size:	64
+number_lookup:	6451
+number_miss:	153
+miss rate:	0.0237173
+
+
+file_name:	LU.txt
+associativity:	2
+cache_size:	32768
+block_size:	64
+number_lookup:	6451
+number_miss:	150
+miss rate:	0.0232522
+
+
+file_name:	LU.txt
+associativity:	4
+cache_size:	1024
+block_size:	64
+number_lookup:	6451
+number_miss:	502
+miss rate:	0.0778174
+
+
+file_name:	LU.txt
+associativity:	4
+cache_size:	2048
+block_size:	64
+number_lookup:	6451
+number_miss:	270
+miss rate:	0.041854
+
+
+file_name:	LU.txt
+associativity:	4
+cache_size:	4096
+block_size:	64
+number_lookup:	6451
+number_miss:	198
+miss rate:	0.0306929
+
+
+file_name:	LU.txt
+associativity:	4
+cache_size:	8192
+block_size:	64
+number_lookup:	6451
+number_miss:	172
+miss rate:	0.0266625
+
+
+file_name:	LU.txt
+associativity:	4
+cache_size:	16384
+block_size:	64
+number_lookup:	6451
+number_miss:	151
+miss rate:	0.0234072
+
+
+file_name:	LU.txt
+associativity:	4
+cache_size:	32768
+block_size:	64
+number_lookup:	6451
+number_miss:	147
+miss rate:	0.0227872
+
+
+file_name:	LU.txt
+associativity:	8
+cache_size:	1024
+block_size:	64
+number_lookup:	6451
+number_miss:	505
+miss rate:	0.0782824
+
+
+file_name:	LU.txt
+associativity:	8
+cache_size:	2048
+block_size:	64
+number_lookup:	6451
+number_miss:	257
+miss rate:	0.0398388
+
+
+file_name:	LU.txt
+associativity:	8
+cache_size:	4096
+block_size:	64
+number_lookup:	6451
+number_miss:	181
+miss rate:	0.0280577
+
+
+file_name:	LU.txt
+associativity:	8
+cache_size:	8192
+block_size:	64
+number_lookup:	6451
+number_miss:	158
+miss rate:	0.0244923
+
+
+file_name:	LU.txt
+associativity:	8
+cache_size:	16384
+block_size:	64
+number_lookup:	6451
+number_miss:	148
+miss rate:	0.0229422
+
+
+file_name:	LU.txt
+associativity:	8
+cache_size:	32768
+block_size:	64
+number_lookup:	6451
+number_miss:	147
+miss rate:	0.0227872
+
+
+file_name:	RADIX.txt
+associativity:	1
+cache_size:	1024
+block_size:	64
+number_lookup:	69440
+number_miss:	17420
+miss rate:	0.250864
+
+
+file_name:	RADIX.txt
+associativity:	1
+cache_size:	2048
+block_size:	64
+number_lookup:	69440
+number_miss:	14733
+miss rate:	0.212169
+
+
+file_name:	RADIX.txt
+associativity:	1
+cache_size:	4096
+block_size:	64
+number_lookup:	69440
+number_miss:	13372
+miss rate:	0.192569
+
+
+file_name:	RADIX.txt
+associativity:	1
+cache_size:	8192
+block_size:	64
+number_lookup:	69440
+number_miss:	5855
+miss rate:	0.0843174
+
+
+file_name:	RADIX.txt
+associativity:	1
+cache_size:	16384
+block_size:	64
+number_lookup:	69440
+number_miss:	5108
+miss rate:	0.0735599
+
+
+file_name:	RADIX.txt
+associativity:	1
+cache_size:	32768
+block_size:	64
+number_lookup:	69440
+number_miss:	855
+miss rate:	0.0123128
+
+
+file_name:	RADIX.txt
+associativity:	2
+cache_size:	1024
+block_size:	64
+number_lookup:	69440
+number_miss:	7898
+miss rate:	0.113738
+
+
+file_name:	RADIX.txt
+associativity:	2
+cache_size:	2048
+block_size:	64
+number_lookup:	69440
+number_miss:	4772
+miss rate:	0.0687212
+
+
+file_name:	RADIX.txt
+associativity:	2
+cache_size:	4096
+block_size:	64
+number_lookup:	69440
+number_miss:	3032
+miss rate:	0.0436636
+
+
+file_name:	RADIX.txt
+associativity:	2
+cache_size:	8192
+block_size:	64
+number_lookup:	69440
+number_miss:	1883
+miss rate:	0.0271169
+
+
+file_name:	RADIX.txt
+associativity:	2
+cache_size:	16384
+block_size:	64
+number_lookup:	69440
+number_miss:	781
+miss rate:	0.0112471
+
+
+file_name:	RADIX.txt
+associativity:	2
+cache_size:	32768
+block_size:	64
+number_lookup:	69440
+number_miss:	562
+miss rate:	0.00809332
+
+
+file_name:	RADIX.txt
+associativity:	4
+cache_size:	1024
+block_size:	64
+number_lookup:	69440
+number_miss:	2323
+miss rate:	0.0334533
+
+
+file_name:	RADIX.txt
+associativity:	4
+cache_size:	2048
+block_size:	64
+number_lookup:	69440
+number_miss:	1898
+miss rate:	0.0273329
+
+
+file_name:	RADIX.txt
+associativity:	4
+cache_size:	4096
+block_size:	64
+number_lookup:	69440
+number_miss:	1664
+miss rate:	0.0239631
+
+
+file_name:	RADIX.txt
+associativity:	4
+cache_size:	8192
+block_size:	64
+number_lookup:	69440
+number_miss:	1289
+miss rate:	0.0185628
+
+
+file_name:	RADIX.txt
+associativity:	4
+cache_size:	16384
+block_size:	64
+number_lookup:	69440
+number_miss:	811
+miss rate:	0.0116791
+
+
+file_name:	RADIX.txt
+associativity:	4
+cache_size:	32768
+block_size:	64
+number_lookup:	69440
+number_miss:	539
+miss rate:	0.0077621
+
+
+file_name:	RADIX.txt
+associativity:	8
+cache_size:	1024
+block_size:	64
+number_lookup:	69440
+number_miss:	2311
+miss rate:	0.0332805
+
+
+file_name:	RADIX.txt
+associativity:	8
+cache_size:	2048
+block_size:	64
+number_lookup:	69440
+number_miss:	1876
+miss rate:	0.0270161
+
+
+file_name:	RADIX.txt
+associativity:	8
+cache_size:	4096
+block_size:	64
+number_lookup:	69440
+number_miss:	1649
+miss rate:	0.0237471
+
+
+file_name:	RADIX.txt
+associativity:	8
+cache_size:	8192
+block_size:	64
+number_lookup:	69440
+number_miss:	1337
+miss rate:	0.019254
+
+
+file_name:	RADIX.txt
+associativity:	8
+cache_size:	16384
+block_size:	64
+number_lookup:	69440
+number_miss:	859
+miss rate:	0.0123704
+
+
+file_name:	RADIX.txt
+associativity:	8
+cache_size:	32768
+block_size:	64
+number_lookup:	69440
+number_miss:	529
+miss rate:	0.00761809
+
